@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Estilos globais para a barra de rolagem do navegador */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(220 38 38 / 0.8) transparent;
+}
+
+html::-webkit-scrollbar {
+  width: 6px;
+}
+
+html::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+html::-webkit-scrollbar-thumb {
+  background-color: rgb(220 38 38 / 0.8);
+  border-radius: 3px;
+}
+
+html::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(220 38 38);
+}
+
+/* Estilos para a barra de rolagem no modo escuro */
+.dark html {
+  scrollbar-color: rgb(239 68 68 / 0.8) transparent;
+}
+
+.dark html::-webkit-scrollbar-thumb {
+  background-color: rgb(239 68 68 / 0.8);
+}
+
+.dark html::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(239 68 68);
+}
+
+@layer utilities {
+  /* Estilos para a barra de rolagem */
+  .scrollbar-custom {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(220 38 38 / 0.8) transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: rgb(220 38 38 / 0.8);
+    border-radius: 3px;
+  }
+
+  .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(220 38 38);
+  }
+
+  /* Estilos para a barra de rolagem no modo escuro */
+  .dark .scrollbar-custom {
+    scrollbar-color: rgb(239 68 68 / 0.8) transparent;
+  }
+
+  .dark .scrollbar-custom::-webkit-scrollbar-thumb {
+    background-color: rgb(239 68 68 / 0.8);
+  }
+
+  .dark .scrollbar-custom::-webkit-scrollbar-thumb:hover {
+    background-color: rgb(239 68 68);
+  }
+}
