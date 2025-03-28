@@ -97,7 +97,7 @@ export const products: Product[] = [
     name: 'Batata Frita Grande',
     description: 'Porção de batatas fritas crocantes (400g)',
     price: 20.00,
-    image: 'https://images.unsplash.com/photo-1518013431117-eb1465fa5752?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://images.unsplash.com/photo-1743193711514-4f7bc5d78d4d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dhttps://images.unsplash.com/photo-1743193711514-4f7bc5d78d4d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 26.00,
