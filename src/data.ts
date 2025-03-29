@@ -133,7 +133,7 @@ export const products: Product[] = [
     name: 'Refrigerante 600ml',
     description: '600ml',
     price: 7.50,
-    image: 'https://images.unsplash.com/photo-1629203851122-3726ecdf080e?w=500',
+    image: 'https://images.unsplash.com/photo-1605712916345-6ef6bcc2e29c?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'drink' as const,
     drinkType: 'refri-600',
     variants: [
@@ -164,7 +164,7 @@ export const products: Product[] = [
     name: 'Refrigerante 2 litros',
     description: '2 litros',
     price: 11.00,
-    image: 'https://images.unsplash.com/photo-1605712916345-6ef6bcc2e29c?q=80&w=1972&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://images.unsplash.com/photo-1733909295574-debb36b2fdb1?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'drink' as const,
     drinkType: 'refri-2litros',
     variants: [
