@@ -30,7 +30,7 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center gap-2">
-          <img src="/imgs/logonew.png" alt="logo na brasa"/>
+          <img src="https://imgur.com/a/qaV64v8?w=100" alt="logo na brasa"/>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Na Brasa©</h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">Hambúrgueres Artesanais</p>
