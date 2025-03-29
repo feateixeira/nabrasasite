@@ -17,6 +17,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/nabrasa" element={<Menu />} />
+        <Route path="/contato" element={<Contact />} />
       </Routes>
     </div>
   );

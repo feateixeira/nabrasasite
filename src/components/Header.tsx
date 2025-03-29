@@ -1,5 +1,5 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Moon, Sun } from 'lucide-react';
+import { Utensils, Mail, Moon, Sun } from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 export function Header() {
@@ -35,7 +35,7 @@ export function Header() {
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Na Brasa©</h1>
               <p className="text-sm text-gray-600 dark:text-gray-400">Hambúrgueres Artesanais</p>
             </div>
-          </Link>
+            </Link>
           <div className="flex items-center gap-3">
             <button
               onClick={toggleDarkMode}
@@ -44,7 +44,22 @@ export function Header() {
             >
               {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
             </button>
-            
+            <Link
+              to={isHome ? "/contato" : "/"}
+              className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-700 transition-colors"
+            >
+              {isHome ? (
+                <>
+                  <Mail className="w-5 h-5" />
+                  <span>Contato</span>
+                </>
+              ) : (
+                <>
+                  <Utensils className="w-5 h-5" />
+                  <span>Cardápio</span>
+                </>
+              )}
+            </Link>
           </div>
         </div>
       </div>
