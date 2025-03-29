@@ -1,7 +1,6 @@
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
-import { Contact } from './pages/Contact';
 import { Menu } from './pages/Menu';
 
 function App() {
