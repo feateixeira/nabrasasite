@@ -7,5 +7,5 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
-  base: "/nabrasa"
+  base: "https://www.hamburguerianabrasa.com.br/nabrasa"
 });
