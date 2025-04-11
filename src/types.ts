@@ -13,6 +13,7 @@ export interface Product {
   sweetOptions?: SweetOption[];
   isLoadable?: boolean;
   loadedPrice?: number;
+  potatoOptions?: PotatoOption[];
 }
 
 export interface DrinkVariant {
@@ -34,12 +35,24 @@ export interface BurgerSize {
 export interface CartItem extends Product {
   quantity: number;
   selectedSauce?: string;
+  selectedSauces: string[];
   extraSauces: string[];
   notes?: string;
   selectedVariant?: DrinkVariant;
   selectedSize?: BurgerSize;
   selectedSweetOptions?: SweetOption[];
   isLoaded?: boolean;
+  selectedPotatoOption?: PotatoOption;
+  isTrio?: boolean;
+  trioDetails?: {
+    drinkName: string;
+  };
 }
 
 export type DeliveryType = 'pickup' | 'delivery';
+
+export interface PotatoOption {
+  name: string;
+  price: number;
+  description: string;
+}
