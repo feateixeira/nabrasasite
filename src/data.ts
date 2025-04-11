@@ -1,12 +1,13 @@
-import { BurgerSize, SweetOption, Product } from './types';
+import { BurgerSize, SweetOption, Product, DrinkVariant, PotatoOption } from './types';
 
-export const products: Product[] = [
+// Memoização dos dados para evitar recálculos desnecessários
+const memoizedProducts: Product[] = [
   {
     id: '1',
     name: 'Na Brasa',
     description: 'Pão Brioche, Blend artesanal (130g), queijo cheddar, alface',
     price: 14.00,
-    image: 'https://images.unsplash.com/photo-1743187374735-f07fb1c88f6e?q=80&w=1965&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://i.imgur.com/8rpAfAs.jpg?w=500',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group1'
@@ -16,7 +17,7 @@ export const products: Product[] = [
     name: 'Na Brasa Especial',
     description: 'Pão Brioche, Blend artesanal (130g), Queijo cheddar, Alface + Cebola caramelizada & Pedaços de Bacon',
     price: 20.00,
-    image: 'https://images.unsplash.com/photo-1743187374727-857990a907ea?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://i.imgur.com/rOm5sQd.jpg?w=500',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group2'
@@ -26,7 +27,7 @@ export const products: Product[] = [
     name: 'Na Brasa Supremo',
     description: 'Pão Brioche, Blend Artesanal (130g), Queijo Cheddar, Alface + Cebola Roxa & Pedaços de Bacon',
     price: 20.00,
-    image: 'https://images.unsplash.com/photo-1743187374807-fbad59171250?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://i.imgur.com/AdRR0lw.jpg?w=500',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group2'
@@ -36,7 +37,7 @@ export const products: Product[] = [
     name: 'Hambúrguer Nutella',
     description: 'Pão Brioche, Nutella e Morangos',
     price: 16.00,
-    image: 'https://images.unsplash.com/photo-1743187374785-5efa2d548ac4?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+    image: 'https://i.imgur.com/7Xm9JF9.jpg?w=500',
     type: 'burger' as const,
     burgerSizeGroup: 'group3',
     isSweetBurger: true,
@@ -44,7 +45,7 @@ export const products: Product[] = [
       { 
         name: 'Nutella', 
         price: 16.00,
-        image: 'https://images.unsplash.com/photo-1612187206642-12fce328a2c7?w=500'
+        image: 'https://i.imgur.com/7Xm9JF9.jpg?w=500'
       },
     ]
   },
@@ -148,7 +149,7 @@ export const products: Product[] = [
     name: 'Sucos 1 litro',
     description: '1 litro',
     price: 8.00,
-    image: 'https://images.unsplash.com/photo-1613478223719-2ab802602423?w=500',
+    image: 'https://i.imgur.com/pujtyWe.jpg',
     type: 'drink' as const,
     drinkType: 'refri-1litro',
     variants: [
@@ -188,6 +189,18 @@ export const products: Product[] = [
     ]
   },
 ];
+
+// Função para carregar os produtos de forma lazy
+export const getProducts = () => {
+  return new Promise<Product[]>((resolve) => {
+    setTimeout(() => {
+      resolve(memoizedProducts);
+    }, 0);
+  });
+};
+
+// Exportar os dados memoizados
+export const products = memoizedProducts;
 
 export const burgerSizes: Record<string, BurgerSize[]> = {
   group1: [

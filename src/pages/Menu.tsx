@@ -1,10 +1,28 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense, useEffect } from 'react';
 import { Plus, Minus, X, Send, Store, MapPin } from 'lucide-react';
-import { products, burgerSizes, drinkOptions } from '../data';
+import { getProducts, burgerSizes, drinkOptions } from '../data';
 import { CartItem, Product, DrinkVariant, BurgerSize, PotatoOption } from '../types';
 import { toast } from 'sonner';
 
+// Componente de loading para imagens
+const ImageWithLoading = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
+  return (
+    <img 
+      src={src} 
+      alt={alt} 
+      className={className} 
+      loading="lazy"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        target.src = 'https://via.placeholder.com/500x500?text=Imagem+Indisponível';
+      }}
+    />
+  );
+};
+
 export function Menu() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -19,8 +37,33 @@ export function Menu() {
   const [isTrio, setIsTrio] = useState(false);
   const [showDrinkSelector, setShowDrinkSelector] = useState(false);
   const [selectedTrioDrink, setSelectedTrioDrink] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState<string>('');
 
   const DELIVERY_FEE = 4.00;
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const loadedProducts = await getProducts();
+        setProducts(loadedProducts);
+      } catch (error) {
+        toast.error('Erro ao carregar produtos');
+        console.error('Erro ao carregar produtos:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
 
   const burgers = products.filter(product => product.type === 'burger' && !product.isSweetBurger);
   const sides = products.filter(product => product.type === 'side');
@@ -54,7 +97,16 @@ export function Menu() {
       if (selectedSauces.length < maxTotalSauces) {
         setSelectedSauces([...selectedSauces, sauce]);
       } else {
-        toast.error(`Máximo de ${maxTotalSauces} molhos`);
+        toast.error(`Máximo de ${maxTotalSauces} molhos`, {
+          duration: 3000,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            background: '#ef4444',
+            color: 'white',
+            border: '2px solid #b91c1c',
+          }
+        });
       }
     }
   };
@@ -90,6 +142,7 @@ export function Menu() {
         name: `${selectedProduct.name} - ${selectedSize.name}`,
         quantity: 1,
         selectedSauces: [],
+        extraSauces: [],
         notes: productNote,
         selectedSize: selectedSize
       };
@@ -105,6 +158,7 @@ export function Menu() {
         name: selectedVariant.name,
         quantity: 1,
         selectedSauces: [],
+        extraSauces: [],
         notes: productNote,
         selectedVariant: selectedVariant
       };
@@ -115,12 +169,30 @@ export function Menu() {
     }
 
     if (selectedProduct.type === 'side' && !selectedPotatoOption) {
-      toast.error('Selecione uma opção de batata');
+      toast.error('⚠️ SELECIONE UMA OPÇÃO DE BATATA', {
+        duration: 3000,
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
       return;
     }
 
     if (isTrio && !selectedTrioDrink) {
-      toast.error('Selecione um refrigerante para o trio');
+      toast.error('⚠️ SELECIONE UM REFRIGERANTE PARA O TRIO', {
+        duration: 3000,
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
       return;
     }
 
@@ -128,6 +200,7 @@ export function Menu() {
       ...selectedProduct,
       quantity: 1,
       selectedSauces: selectedSauces,
+      extraSauces: [],
       notes: productNote,
       selectedVariant: selectedVariant || undefined,
       selectedSize: selectedSize || undefined,
@@ -194,12 +267,44 @@ export function Menu() {
 
   const handleWhatsAppCheckout = () => {
     if (cart.length === 0) {
-      toast.error('Adicione itens ao carrinho');
+      toast.error('Adicione itens ao carrinho', {
+        duration: 5000,
+        style: {
+          fontSize: '18px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
       return;
     }
 
     if (deliveryType === 'delivery' && !address.trim()) {
-      toast.error('Informe o endereço de entrega');
+      toast.error('⚠️ INFORME O ENDEREÇO DE ENTREGA', {
+        duration: 5000,
+        style: {
+          fontSize: '18px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
+      return;
+    }
+
+    if (!paymentMethod || paymentMethod.trim() === '') {
+      toast.error('⚠️ SELECIONE UMA FORMA DE PAGAMENTO', {
+        duration: 5000,
+        style: {
+          fontSize: '18px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
       return;
     }
 
@@ -264,6 +369,8 @@ export function Menu() {
       message += `*Endereço:* ${address}\n`;
     }
 
+    message += `*Forma de pagamento:* ${paymentMethod}\n`;
+
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/556199133181?text=${encodedMessage}`, '_blank');
   };
@@ -288,7 +395,7 @@ export function Menu() {
                   >
                     <div className="flex flex-col h-full">
                       <div className="h-48 w-full">
-                        <img
+                        <ImageWithLoading
                           src={product.image}
                           alt={product.name}
                           className="h-full w-full object-cover"
@@ -334,7 +441,7 @@ export function Menu() {
                   >
                     <div className="flex flex-col h-full">
                       <div className="h-48 w-full">
-                        <img
+                        <ImageWithLoading
                           src={product.image}
                           alt={product.name}
                           className="h-full w-full object-cover"
@@ -373,7 +480,7 @@ export function Menu() {
                   >
                     <div className="flex flex-col h-full">
                       <div className="h-48 w-full">
-                        <img
+                        <ImageWithLoading
                           src={product.image}
                           alt={product.name}
                           className="h-full w-full object-cover"
@@ -422,7 +529,7 @@ export function Menu() {
                         <div key={index} className="border-b dark:border-gray-700 pb-4 last:border-0">
                           <div className="flex items-start gap-3">
                             <div className="flex-shrink-0">
-                              <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
+                              <ImageWithLoading src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-lg" />
                             </div>
                             <div className="flex-1 min-w-0">
                               <div className="flex justify-between items-start">
@@ -538,6 +645,23 @@ export function Menu() {
                           />
                         </div>
                       )}
+
+                      <div className="space-y-2">
+                        <label htmlFor="paymentMethod" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Forma de pagamento
+                        </label>
+                        <select
+                          id="paymentMethod"
+                          value={paymentMethod}
+                          onChange={(e) => setPaymentMethod(e.target.value)}
+                          className="w-full p-2 border dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+                        >
+                          <option value="">Selecione uma forma de pagamento</option>
+                          <option value="dinheiro">Dinheiro</option>
+                          <option value="pix">PIX</option>
+                          <option value="cartao">Cartão de crédito/débito</option>
+                        </select>
+                      </div>
                     </div>
                   </div>
 
@@ -578,7 +702,7 @@ export function Menu() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-gray-800 rounded-xl shadow-xl max-w-lg w-full max-h-[90vh] overflow-y-auto scrollbar-custom">
             <div className="relative">
-              <img
+              <ImageWithLoading
                 src={selectedProduct.image}
                 alt={selectedProduct.name}
                 className="w-full h-48 object-cover"
