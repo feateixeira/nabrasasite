@@ -88,7 +88,7 @@ const memoizedProducts: Product[] = [
       },
       {
         name: 'Recheada',
-        price: 28.00,
+        price: 20.00,
         description: 'Porção de batatas fritas crocantes (300g) com cheddar cremoso e bacon crocante'
       }
     ]
