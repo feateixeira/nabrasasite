@@ -7,7 +7,7 @@ const memoizedProducts: Product[] = [
     name: 'Na Brasa',
     description: 'Pão Brioche, Blend artesanal (130g), queijo cheddar, alface',
     price: 14.00,
-    image: 'https://i.imgur.com/8rpAfAs.jpg?w=500',
+    image: 'https://imgur.com/KDqnnFM.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group1'
@@ -17,7 +17,7 @@ const memoizedProducts: Product[] = [
     name: 'Na Brasa Especial',
     description: 'Pão Brioche, Blend artesanal (130g), Queijo cheddar, Alface + Cebola caramelizada & Pedaços de Bacon',
     price: 20.00,
-    image: 'https://i.imgur.com/rOm5sQd.jpg?w=500',
+    image: 'https://imgur.com/5Bzmmhy.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group2'
@@ -27,7 +27,7 @@ const memoizedProducts: Product[] = [
     name: 'Na Brasa Supremo',
     description: 'Pão Brioche, Blend Artesanal (130g), Queijo Cheddar, Alface + Cebola Roxa & Pedaços de Bacon',
     price: 20.00,
-    image: 'https://i.imgur.com/AdRR0lw.jpg?w=500',
+    image: 'https://imgur.com/TeQVxPI.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group2'
@@ -37,7 +37,7 @@ const memoizedProducts: Product[] = [
     name: 'Hambúrguer Nutella',
     description: 'Pão Brioche, Nutella e Morangos',
     price: 16.00,
-    image: 'https://i.imgur.com/7Xm9JF9.jpg?w=500',
+    image: 'https://imgur.com/W7018Tj.jpg',
     type: 'burger' as const,
     burgerSizeGroup: 'group3',
     isSweetBurger: true,
@@ -45,7 +45,7 @@ const memoizedProducts: Product[] = [
       { 
         name: 'Nutella', 
         price: 16.00,
-        image: 'https://i.imgur.com/7Xm9JF9.jpg?w=500'
+        image: 'https://imgur.com/W7018Tj.jpg'
       },
     ]
   },
@@ -63,11 +63,6 @@ const memoizedProducts: Product[] = [
         name: 'Normal',
         price: 8.00,
         description: 'Porção de batatas fritas crocantes (150g)'
-      },
-      {
-        name: 'Recheada',
-        price: 12.00,
-        description: 'Porção de batatas fritas crocantes (150g) com cheddar cremoso e bacon crocante'
       }
     ]
   },
@@ -98,7 +93,7 @@ const memoizedProducts: Product[] = [
     name: 'Batata Frita Grande',
     description: 'Porção de batatas fritas crocantes (400g)',
     price: 20.00,
-    image: 'https://images.unsplash.com/photo-1743193711514-4f7bc5d78d4d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dhttps://images.unsplash.com/photo-1743193711514-4f7bc5d78d4d?q=80&w=1964&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://imgur.com/PTMmqda.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 26.00,
