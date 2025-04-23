@@ -217,6 +217,5 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
 export const drinkOptions = [
   { name: 'Coca-Cola', price: 5 },
   { name: 'Coca-Cola Zero', price: 5 },
-  { name: 'Guaraná', price: 5 },
-  { name: 'Sprite', price: 5 }
+  { name: 'Guaraná', price: 5 }
 ];
