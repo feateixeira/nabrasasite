@@ -6,6 +6,7 @@ export interface Product {
   image: string;
   type: 'burger' | 'side' | 'drink';
   availableSauces?: string[];
+  maxSauces?: number;
   variants?: DrinkVariant[];
   drinkType?: string;
   burgerSizeGroup?: string;

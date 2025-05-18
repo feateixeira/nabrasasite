@@ -92,7 +92,7 @@ export function Menu() {
     if (selectedSauces.includes(sauce)) {
       setSelectedSauces(selectedSauces.filter(s => s !== sauce));
     } else {
-      const maxTotalSauces = 4;
+      const maxTotalSauces = selectedProduct?.maxSauces || 4;
       
       if (selectedSauces.length < maxTotalSauces) {
         setSelectedSauces([...selectedSauces, sauce]);
@@ -881,6 +881,34 @@ export function Menu() {
                 </div>
               )}
 
+              {selectedProduct.availableSauces && (
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Escolha os molhos</h4>
+                    {selectedProduct.maxSauces && (
+                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                        Escolha {selectedProduct.maxSauces} molho(s)
+                      </span>
+                    )}
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {selectedProduct.availableSauces.map((sauce) => (
+                      <button
+                        key={sauce}
+                        onClick={() => toggleSauce(sauce)}
+                        className={`px-3 py-2 rounded-lg text-sm ${
+                          selectedSauces.includes(sauce)
+                            ? 'bg-red-600 text-white'
+                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                        }`}
+                      >
+                        {sauce}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="mb-6">
                 <label htmlFor="notes" className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                   Observações
@@ -944,10 +972,29 @@ export function Menu() {
                   )}
                 </div>
                 <button
-                  onClick={addToCart}
-                  className="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors"
+                  onClick={() => {
+                    if (selectedProduct.isUnavailable) {
+                      toast.error('Este item ainda não está disponível', {
+                        duration: 3000,
+                        style: {
+                          fontSize: '16px',
+                          fontWeight: 'bold',
+                          background: '#ef4444',
+                          color: 'white',
+                          border: '2px solid #b91c1c',
+                        }
+                      });
+                      return;
+                    }
+                    addToCart();
+                  }}
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
+                    selectedProduct.isUnavailable
+                      ? 'bg-gray-400 cursor-not-allowed'
+                      : 'bg-red-600 text-white hover:bg-red-700'
+                  }`}
                 >
-                  Adicionar
+                  {selectedProduct.isUnavailable ? 'Indisponível' : 'Adicionar'}
                 </button>
               </div>
             </div>

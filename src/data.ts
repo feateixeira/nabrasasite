@@ -171,7 +171,7 @@ const memoizedProducts: Product[] = [
     id: '12',
     name: 'Água',
     description: 'Água',
-    price: 3.00,
+    price: 2.50,
     image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'drink' as const,
     drinkType: 'agua',
@@ -183,25 +183,27 @@ const memoizedProducts: Product[] = [
   {
     id: '14',
     name: 'Frango no Pote',
-    description: 'Frango desfiado com molho especial',
+    description: 'Filé de frango empanado com molho especial',
     price: 20.00,
     image: 'https://imgur.com/53gxRQr.jpg',
     type: 'side' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    maxSauces: 2,
     potatoOptions: [
       {
         name: 'P',
         price: 20.00,
-        description: 'Porção pequena de peito de frango, empanado e frito'
+        description: 'Porção pequena de frango empanado'
       },
       {
         name: 'M',
         price: 37.00,
-        description: 'Porção média de peito de frango, empanado e frito'
+        description: 'Porção média de frango empanado'
       },
       {
         name: 'G',
         price: 50.00,
-        description: 'Porção grande de peito de frango, empanado e frito'
+        description: 'Porção grande de frango empanado'
       }
     ]
   },
