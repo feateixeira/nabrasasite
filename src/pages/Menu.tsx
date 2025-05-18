@@ -198,6 +198,7 @@ export function Menu() {
 
     const newCartItem: CartItem = {
       ...selectedProduct,
+      name: selectedPotatoOption ? `${selectedProduct.name} - ${selectedPotatoOption.name}` : selectedProduct.name,
       quantity: 1,
       selectedSauces: selectedSauces,
       extraSauces: [],

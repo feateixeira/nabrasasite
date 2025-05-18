@@ -93,7 +93,7 @@ const memoizedProducts: Product[] = [
     name: 'Batata Frita Grande',
     description: 'Porção de batatas fritas crocantes (400g)',
     price: 20.00,
-    image: 'https://imgur.com/PTMmqda.jpg',
+    image: 'https://imgur.com/HPxUanA.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 26.00,
@@ -135,8 +135,7 @@ const memoizedProducts: Product[] = [
     variants: [
       { name: 'Coca-Cola 600ml', price: 7.5 },
       { name: 'Coca-Cola Zero 600ml', price: 7.5 },
-      { name: 'Guaraná 600ml', price: 7.5 },
-      { name: 'Guaraná Zero 600ml', price: 7.5 }
+      { name: 'Guaraná 600ml', price: 7.5 }
     ]
   },
   {
@@ -151,23 +150,21 @@ const memoizedProducts: Product[] = [
       { name: 'Suco Dell Vale Uva 1lt', price: 8 },
       { name: 'Suco Dell Vale Maracujá1lt', price: 8 },
       { name: 'Suco Dell Vale Laranja 1lt', price: 8 },
-      { name: 'Suco Dell Vale Pêssego 1lt', price: 8 },
-      { name: 'Suco Dell Vale Abacaxi 1lt', price: 8 }
+      { name: 'Suco Dell Vale Pêssego 1lt', price: 8 }
     ]
   },
   {
     id: '11',
     name: 'Refrigerante 2 litros',
     description: '2 litros',
-    price: 11.00,
+    price: 12.00,
     image: 'https://images.unsplash.com/photo-1733909295574-debb36b2fdb1?q=80&w=1936&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'drink' as const,
     drinkType: 'refri-2litros',
     variants: [
-      { name: 'Coca-Cola 2l', price: 11 },
-      { name: 'Coca-Cola Zero 2l', price: 11 },
-      { name: 'Guaraná 2l', price: 11 },
-      { name: 'Sprit 2l', price: 11 }
+      { name: 'Coca-Cola 2l', price: 12 },
+      { name: 'Coca-Cola Zero 2l', price: 12 },
+      { name: 'Guaraná 2l', price: 12 }
     ]
   },
   {
@@ -179,9 +176,54 @@ const memoizedProducts: Product[] = [
     type: 'drink' as const,
     drinkType: 'agua',
     variants: [
-      { name: 'Água com gás', price: 5 },
-      { name: 'Água sem gás', price: 4 }
+      { name: 'Água com gás', price: 4 },
+      { name: 'Água sem gás', price: 2.5 }
     ]
+  },
+  {
+    id: '14',
+    name: 'Frango no Pote',
+    description: 'Frango desfiado com molho especial',
+    price: 20.00,
+    image: 'https://imgur.com/53gxRQr.jpg',
+    type: 'side' as const,
+    potatoOptions: [
+      {
+        name: 'P',
+        price: 20.00,
+        description: 'Porção pequena de peito de frango, empanado e frito'
+      },
+      {
+        name: 'M',
+        price: 37.00,
+        description: 'Porção média de peito de frango, empanado e frito'
+      },
+      {
+        name: 'G',
+        price: 50.00,
+        description: 'Porção grande de peito de frango, empanado e frito'
+      }
+    ]
+  },
+  {
+    id: '15',
+    name: 'Suco/Creme Na Brasa',
+    description: 'Em breve estaremos servindo sucos e cremes naturais.',
+    price: 8.00,
+    image: 'https://imgur.com/kAfQiPT.jpg',
+    type: 'drink' as const,
+    drinkType: 'suco-creme',
+    isUnavailable: true
+  },
+  {
+    id: '16',
+    name: 'Na Brasa Frango',
+    description: 'Pão Brioche, Filé de frango empanado (130g), queijo cheddar, alface',
+    price: 20.00,
+    image: 'https://imgur.com/WGNi1gV.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group5'
   },
 ];
 
@@ -211,6 +253,16 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
   group3: [
     { name: 'Nutella', priceIncrease: 0 },
     { name: 'Doce de Leite', priceIncrease: 0 }
+  ],
+  group4: [
+    { name: 'P', priceIncrease: 0 },
+    { name: 'M', priceIncrease: 17 },
+    { name: 'G', priceIncrease: 30 }
+  ],
+  group5: [
+    { name: 'Simples', priceIncrease: 0 },
+    { name: 'Duplo', priceIncrease: 7 },
+    { name: 'Triplo', priceIncrease: 12 }
   ]
 };
 

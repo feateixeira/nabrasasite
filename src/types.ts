@@ -14,6 +14,7 @@ export interface Product {
   isLoadable?: boolean;
   loadedPrice?: number;
   potatoOptions?: PotatoOption[];
+  isUnavailable?: boolean;
 }
 
 export interface DrinkVariant {
