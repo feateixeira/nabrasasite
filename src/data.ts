@@ -69,7 +69,7 @@ const memoizedProducts: Product[] = [
   {
     id: '6',
     name: 'Batata Frita Média',
-    description: 'Porção de batatas fritas, cheddar cremoso e bacon crocante (300g)',
+    description: 'Porção de batatas fritas, mussarela e bacon crocante (300g)',
     price: 15.00,
     image: 'https://images.unsplash.com/photo-1630431341973-02e1b662ec35?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'side' as const,
@@ -84,7 +84,7 @@ const memoizedProducts: Product[] = [
       {
         name: 'Recheada',
         price: 20.00,
-        description: 'Porção de batatas fritas crocantes (300g) com cheddar cremoso e bacon crocante'
+        description: 'Porção de batatas fritas crocantes (300g) com mussarela e bacon crocante'
       }
     ]
   },
@@ -106,7 +106,7 @@ const memoizedProducts: Product[] = [
       {
         name: 'Recheada',
         price: 28.00,
-        description: 'Porção de batatas fritas crocantes (400g) com cheddar cremoso e bacon crocante'
+        description: 'Porção de batatas fritas crocantes (400g) com mussarela e bacon crocante'
       }
     ]
   },
