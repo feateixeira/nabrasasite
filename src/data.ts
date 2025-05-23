@@ -193,29 +193,53 @@ const memoizedProducts: Product[] = [
       {
         name: 'P',
         price: 20.00,
-        description: 'Porção pequena de frango empanado'
+        description: 'Porção pequena de frango empanado (3 - 4 pedaços)'
       },
       {
         name: 'M',
         price: 37.00,
-        description: 'Porção média de frango empanado'
+        description: 'Porção média de frango empanado (4 - 6 pedaços)'
       },
       {
         name: 'G',
         price: 50.00,
-        description: 'Porção grande de frango empanado'
+        description: 'Porção grande de frango empanado (6 - 8 pedaços)'
       }
     ]
   },
   {
     id: '15',
-    name: 'Suco/Creme Na Brasa',
-    description: 'Em breve estaremos servindo sucos e cremes naturais.',
+    name: 'Sucos Na Brasa',
+    description: 'Sucos naturais',
+    price: 7.00,
+    image: 'https://imgur.com/kAfQiPT.jpg',
+    type: 'drink' as const,
+    drinkType: 'suco',
+    variants: [
+      { name: 'Morango 330ml', price: 7 },
+      { name: 'Maracujá 330ml', price: 7 },
+      { name: 'Acerola 330ml', price: 7 },
+      { name: 'Abacaxi com Hortelã 330ml', price: 7 },
+      { name: 'Morango 500ml', price: 10 },
+      { name: 'Maracujá 500ml', price: 10 },
+      { name: 'Acerola 500ml', price: 10 },
+      { name: 'Abacaxi com Hortelã 500ml', price: 10 }
+    ]
+  },
+  {
+    id: '17',
+    name: 'Cremes Na Brasa',
+    description: 'Cremes naturais',
     price: 8.00,
     image: 'https://imgur.com/kAfQiPT.jpg',
     type: 'drink' as const,
-    drinkType: 'suco-creme',
-    isUnavailable: true
+    drinkType: 'creme',
+    variants: [
+      { name: 'Maracujá 330ml', price: 8 },
+      { name: 'Morango 330ml', price: 8 },
+      { name: 'Maracujá 500ml', price: 12 },
+      { name: 'Morango 500ml', price: 12 }
+    ]
   },
   {
     id: '16',

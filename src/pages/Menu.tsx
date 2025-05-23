@@ -3,6 +3,7 @@ import { Plus, Minus, X, Send, Store, MapPin } from 'lucide-react';
 import { getProducts, burgerSizes, drinkOptions } from '../data';
 import { CartItem, Product, DrinkVariant, BurgerSize, PotatoOption } from '../types';
 import { toast } from 'sonner';
+import { validateCoupon } from '../coupons';
 
 // Componente de loading para imagens
 const ImageWithLoading = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
@@ -38,6 +39,9 @@ export function Menu() {
   const [showDrinkSelector, setShowDrinkSelector] = useState(false);
   const [selectedTrioDrink, setSelectedTrioDrink] = useState('');
   const [paymentMethod, setPaymentMethod] = useState<string>('');
+  const [couponCode, setCouponCode] = useState('');
+  const [appliedDiscount, setAppliedDiscount] = useState(0);
+  const [discountMessage, setDiscountMessage] = useState('');
 
   const DELIVERY_FEE = 4.00;
 
@@ -264,7 +268,26 @@ export function Menu() {
     return acc + calculateItemPrice(item);
   }, 0);
 
-  const total = subtotal + (deliveryType === 'delivery' ? DELIVERY_FEE : 0);
+  const handleCouponApply = () => {
+    if (!couponCode.trim()) {
+      toast.error('Digite um código de cupom');
+      return;
+    }
+
+    const { valid, message, discount } = validateCoupon(couponCode, subtotal);
+    
+    if (valid) {
+      setAppliedDiscount(discount);
+      setDiscountMessage(message);
+      toast.success(message);
+    } else {
+      setAppliedDiscount(0);
+      setDiscountMessage('');
+      toast.error(message);
+    }
+  };
+
+  const total = subtotal + (deliveryType === 'delivery' ? DELIVERY_FEE : 0) - appliedDiscount;
 
   const handleWhatsAppCheckout = () => {
     if (cart.length === 0) {
@@ -666,6 +689,29 @@ export function Menu() {
                     </div>
                   </div>
 
+                  <div className="border-t dark:border-gray-700 pt-4 mb-4">
+                    <div className="space-y-4">
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={couponCode}
+                          onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                          placeholder="Código do cupom"
+                          className="flex-1 p-2 border dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                        <button
+                          onClick={handleCouponApply}
+                          className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+                        >
+                          Aplicar
+                        </button>
+                      </div>
+                      {discountMessage && (
+                        <p className="text-sm text-green-600 dark:text-green-400">{discountMessage}</p>
+                      )}
+                    </div>
+                  </div>
+
                   <div className="border-t dark:border-gray-700 pt-4 mb-6">
                     <div className="space-y-2">
                       <div className="flex justify-between items-center text-base">
@@ -676,6 +722,12 @@ export function Menu() {
                         <div className="flex justify-between items-center text-base">
                           <span className="text-gray-700 dark:text-gray-300">Taxa de entrega</span>
                           <span className="font-medium dark:text-white">R$ {DELIVERY_FEE.toFixed(2)}</span>
+                        </div>
+                      )}
+                      {appliedDiscount > 0 && (
+                        <div className="flex justify-between items-center text-base">
+                          <span className="text-green-600 dark:text-green-400">Desconto</span>
+                          <span className="font-medium text-green-600 dark:text-green-400">-R$ {appliedDiscount.toFixed(2)}</span>
                         </div>
                       )}
                       <div className="flex justify-between items-center text-xl font-semibold pt-2">
