@@ -933,7 +933,7 @@ export function Menu() {
                 </div>
               )}
 
-              {selectedProduct.availableSauces && (
+              {selectedProduct.availableSauces && selectedProduct.type !== 'burger' && (
                 <div className="mb-6">
                   <div className="flex justify-between items-center mb-2">
                     <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Escolha os molhos</h4>
