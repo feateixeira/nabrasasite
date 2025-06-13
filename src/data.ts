@@ -263,19 +263,6 @@ const memoizedProducts: Product[] = [
     ]
   },
   {
-    id: '19',
-    name: 'Suco de Caixinha',
-    description: 'Suco de caixinha 200ml',
-    price: 4.00,
-    image: 'https://imgur.com/kAfQiPT.jpg',
-    type: 'drink' as const,
-    drinkType: 'suco-caixinha',
-    variants: [
-      { name: 'Uva 200ml', price: 4 },
-      { name: 'Maracujá 200ml', price: 4 }
-    ]
-  },
-  {
     id: '16',
     name: 'Na Brasa Frango',
     description: 'Pão Brioche, Filé de frango empanado (130g), queijo cheddar, alface',
