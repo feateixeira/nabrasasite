@@ -172,7 +172,7 @@ const memoizedProducts: Product[] = [
     name: 'Água',
     description: 'Água',
     price: 3.00,
-    image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    image: 'https://imgur.com/LPcCVPL.jpg',
     type: 'drink' as const,
     drinkType: 'agua',
     variants: [
@@ -219,12 +219,12 @@ const memoizedProducts: Product[] = [
       {
         name: 'M',
         price: 25.00,
-        description: 'Porção média de batata frita com frango, cheddar e bacon (300g)'
+        description: 'Porção média de batata frita com frango, cheddar e bacon (500g)'
       },
       {
         name: 'G',
         price: 37.00,
-        description: 'Porção grande de batata frita com frango, cheddar e bacon (400g)'
+        description: 'Porção grande de batata frita com frango, cheddar e bacon (700g)'
       }
     ]
   },
@@ -252,7 +252,7 @@ const memoizedProducts: Product[] = [
     name: 'Cremes Na Brasa',
     description: 'Cremes naturais',
     price: 8.00,
-    image: 'https://imgur.com/kAfQiPT.jpg',
+    image: 'https://imgur.com/vzVBARw.jpg',
     type: 'drink' as const,
     drinkType: 'creme',
     variants: [
