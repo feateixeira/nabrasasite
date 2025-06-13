@@ -6,7 +6,7 @@ const memoizedProducts: Product[] = [
     id: '1',
     name: 'Na Brasa',
     description: 'Pão Brioche, Blend artesanal (130g), queijo cheddar, alface',
-    price: 14.00,
+    price: 15.00,
     image: 'https://imgur.com/KDqnnFM.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
@@ -54,7 +54,7 @@ const memoizedProducts: Product[] = [
     name: 'Batata Frita Pequena',
     description: 'Porção de batatas fritas crocantes (150g)',
     price: 8.00,
-    image: 'https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500',
+    image: 'https://imgur.com/Sergi99.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 12.00,
@@ -70,20 +70,20 @@ const memoizedProducts: Product[] = [
     id: '6',
     name: 'Batata Frita Média',
     description: 'Porção de batatas fritas, queijo cheddar e bacon crocante (300g)',
-    price: 15.00,
-    image: 'https://images.unsplash.com/photo-1630431341973-02e1b662ec35?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
+    price: 16.00,
+    image: 'https://imgur.com/AKh6NLI.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 20.00,
     potatoOptions: [
       {
         name: 'Normal',
-        price: 15.00,
+        price: 16.00,
         description: 'Porção de batatas fritas crocantes (300g)'
       },
       {
         name: 'Recheada',
-        price: 20.00,
+        price: 21.00,
         description: 'Porção de batatas fritas crocantes (300g) com queijo cheddar e bacon crocante'
       }
     ]
@@ -92,20 +92,20 @@ const memoizedProducts: Product[] = [
     id: '7',
     name: 'Batata Frita Grande',
     description: 'Porção de batatas fritas crocantes (400g)',
-    price: 20.00,
-    image: 'https://imgur.com/HPxUanA.jpg',
+    price: 22.00,
+    image: 'https://imgur.com/PTMmqda.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 26.00,
     potatoOptions: [
       {
         name: 'Normal',
-        price: 20.00,
+        price: 22.00,
         description: 'Porção de batatas fritas crocantes (400g)'
       },
       {
         name: 'Recheada',
-        price: 28.00,
+        price: 30.00,
         description: 'Porção de batatas fritas crocantes (400g) com queijo cheddar e bacon crocante'
       }
     ]
@@ -171,13 +171,13 @@ const memoizedProducts: Product[] = [
     id: '12',
     name: 'Água',
     description: 'Água',
-    price: 2.50,
+    price: 3.00,
     image: 'https://images.unsplash.com/photo-1548839140-29a749e1cf4d?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?w=500',
     type: 'drink' as const,
     drinkType: 'agua',
     variants: [
       { name: 'Água com gás', price: 4 },
-      { name: 'Água sem gás', price: 2.5 }
+      { name: 'Água sem gás', price: 3 }
     ]
   },
   {
@@ -185,7 +185,7 @@ const memoizedProducts: Product[] = [
     name: 'Frango no Pote',
     description: 'Filé de frango empanado com molho especial',
     price: 20.00,
-    image: 'https://imgur.com/53gxRQr.jpg',
+    image: 'https://imgur.com/PwYPcuJ.jpg',
     type: 'side' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     maxSauces: 2,
@@ -204,6 +204,27 @@ const memoizedProducts: Product[] = [
         name: 'G',
         price: 50.00,
         description: 'Porção grande de frango empanado (6 - 8 pedaços)'
+      }
+    ]
+  },
+  {
+    id: '20',
+    name: 'Fritas Na Brasa',
+    description: 'Porção de Batata frita com frango frito, cheddar e bacon & com muito recheio',
+    price: 25.00,
+    image: 'https://imgur.com/AlEjCem.jpg',
+    type: 'side' as const,
+    specialTags: ['Super Especial', 'Muuuuuuuuuito Recheio'],
+    potatoOptions: [
+      {
+        name: 'M',
+        price: 25.00,
+        description: 'Porção média de batata frita com frango, cheddar e bacon (300g)'
+      },
+      {
+        name: 'G',
+        price: 37.00,
+        description: 'Porção grande de batata frita com frango, cheddar e bacon (400g)'
       }
     ]
   },
@@ -242,15 +263,45 @@ const memoizedProducts: Product[] = [
     ]
   },
   {
+    id: '19',
+    name: 'Suco de Caixinha',
+    description: 'Suco de caixinha 200ml',
+    price: 4.00,
+    image: 'https://imgur.com/kAfQiPT.jpg',
+    type: 'drink' as const,
+    drinkType: 'suco-caixinha',
+    variants: [
+      { name: 'Uva 200ml', price: 4 },
+      { name: 'Maracujá 200ml', price: 4 }
+    ]
+  },
+  {
     id: '16',
     name: 'Na Brasa Frango',
     description: 'Pão Brioche, Filé de frango empanado (130g), queijo cheddar, alface',
     price: 20.00,
-    image: 'https://imgur.com/WGNi1gV.jpg',
+    image: 'https://imgur.com/6zBVnyS.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5'
   },
+  {
+    id: '18',
+    name: 'Kids',
+    description: 'Pão Brioche, Blend artesanal (90g), queijo cheddar, alface + Bala Finni',
+    price: 13.00,
+    image: 'https://imgur.com/fVIh7RO.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group6',
+    comboOptions: [
+      {
+        name: 'Combo Kids',
+        price: 17.00,
+        description: 'Hambúrguer Kids + Suco de Caixinha 200ml (Uva ou Maracujá)'
+      }
+    ]
+  }
 ];
 
 // Função para carregar os produtos de forma lazy
@@ -269,7 +320,7 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
   group1: [
     { name: 'Simples', priceIncrease: 0 },
     { name: 'Duplo', priceIncrease: 8 },
-    { name: 'Triplo', priceIncrease: 14 }
+    { name: 'Triplo', priceIncrease: 15 }
   ],
   group2: [
     { name: 'Simples', priceIncrease: 0 },
@@ -289,6 +340,9 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
     { name: 'Simples', priceIncrease: 0 },
     { name: 'Duplo', priceIncrease: 7 },
     { name: 'Triplo', priceIncrease: 12 }
+  ],
+  group6: [
+    { name: 'Simples', priceIncrease: 0 }
   ]
 };
 

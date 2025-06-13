@@ -16,6 +16,12 @@ export interface Product {
   loadedPrice?: number;
   potatoOptions?: PotatoOption[];
   isUnavailable?: boolean;
+  comboOptions?: {
+    name: string;
+    price: number;
+    description: string;
+  }[];
+  specialTags?: string[];
 }
 
 export interface DrinkVariant {

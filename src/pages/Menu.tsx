@@ -368,10 +368,6 @@ export function Menu() {
         }
       }
       
-      if (item.notes) {
-        message += `   Obs: ${item.notes}\n`;
-      }
-      
       message += `\n`;
     });
 
@@ -434,6 +430,11 @@ export function Menu() {
                                 Doce
                               </span>
                             )}
+                            {product.specialTags?.map((tag) => (
+                              <span key={tag} className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs font-medium rounded-full">
+                                {tag}
+                              </span>
+                            ))}
                           </div>
                           <p className="mt-1 text-gray-600 dark:text-gray-400 line-clamp-2">{product.description}</p>
                         </div>
@@ -473,7 +474,14 @@ export function Menu() {
                       </div>
                       <div className="p-4 flex flex-col justify-between flex-grow">
                         <div>
-                          <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{product.name}</h3>
+                          <div className="flex items-center gap-2">
+                            <h3 className="text-xl font-semibold text-gray-900 dark:text-white">{product.name}</h3>
+                            {product.specialTags?.map((tag) => (
+                              <span key={tag} className="px-2 py-1 bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200 text-xs font-medium rounded-full">
+                                {tag}
+                              </span>
+                            ))}
+                          </div>
                           <p className="mt-1 text-gray-600 dark:text-gray-400 line-clamp-2">{product.description}</p>
                         </div>
                         <div className="mt-4 flex justify-between items-center">
@@ -816,7 +824,6 @@ export function Menu() {
 
               {selectedProduct.type === 'burger' && !selectedProduct.isSweetBurger && (
                 <div className="mb-6">
-                  
                   <button
                     onClick={toggleTrio}
                     className={`w-full px-4 py-2 rounded-lg font-medium ${
@@ -825,31 +832,62 @@ export function Menu() {
                         : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                     }`}
                   >
-                    {isTrio ? 'Trio Selecionado (+R$ 10,00)' : 'Transformar em Trio (+R$ 10,00)'}
+                    {isTrio 
+                      ? selectedProduct.id === '18' 
+                        ? 'Combo Selecionado (+R$ 10,00)' 
+                        : 'Trio Selecionado (+R$ 10,00)'
+                      : selectedProduct.id === '18'
+                        ? 'Transformar em Combo (+R$ 10,00)'
+                        : 'Transformar em Trio (+R$ 10,00)'}
                   </button>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                    Inclui batata pequena + refrigerante lata
+                    {selectedProduct.id === '18' 
+                      ? 'Inclui batata pequena + suco de caixinha'
+                      : 'Inclui batata pequena + refrigerante lata'}
                   </p>
                 </div>
               )}
 
               {showDrinkSelector && (
                 <div className="mb-6">
-                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Escolha o refrigerante</h4>
+                  <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    {selectedProduct.id === '18' ? 'Escolha o suco' : 'Escolha o refrigerante'}
+                  </h4>
                   <div className="space-y-2">
-                    {drinkOptions.map((drink) => (
-                      <button
-                        key={drink.name}
-                        onClick={() => selectTrioDrink(drink.name)}
-                        className={`w-full px-4 py-2 rounded-lg text-left ${
-                          selectedTrioDrink === drink.name
-                            ? 'bg-red-600 text-white'
-                            : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
-                        }`}
-                      >
-                        {drink.name}
-                      </button>
-                    ))}
+                    {selectedProduct.id === '18' ? (
+                      // Opções de suco para o combo Kids
+                      [
+                        { name: 'Uva 200ml', price: 4 },
+                        { name: 'Maracujá 200ml', price: 4 }
+                      ].map((drink) => (
+                        <button
+                          key={drink.name}
+                          onClick={() => selectTrioDrink(drink.name)}
+                          className={`w-full px-4 py-2 rounded-lg text-left ${
+                            selectedTrioDrink === drink.name
+                              ? 'bg-red-600 text-white'
+                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {drink.name}
+                        </button>
+                      ))
+                    ) : (
+                      // Opções de refrigerante para outros combos
+                      drinkOptions.map((drink) => (
+                        <button
+                          key={drink.name}
+                          onClick={() => selectTrioDrink(drink.name)}
+                          className={`w-full px-4 py-2 rounded-lg text-left ${
+                            selectedTrioDrink === drink.name
+                              ? 'bg-red-600 text-white'
+                              : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
+                          }`}
+                        >
+                          {drink.name}
+                        </button>
+                      ))
+                    )}
                   </div>
                 </div>
               )}
