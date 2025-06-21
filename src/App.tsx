@@ -2,6 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
 import { Menu } from './pages/Menu';
+import { Contact } from './pages/Contact';
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
       <Header />
       <Routes>
         <Route path="/" element={<Menu />} />
+        <Route path="/contato" element={<Contact />} />
       </Routes>
     </div>
   );

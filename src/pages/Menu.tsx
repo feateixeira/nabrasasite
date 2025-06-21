@@ -356,6 +356,10 @@ export function Menu() {
       
       message += ` - R$ ${itemTotal.toFixed(2)}\n`;
       
+      if (item.notes && item.notes.trim() !== '') {
+        message += `   Obs: ${item.notes}\n`;
+      }
+      
       if (item.type === 'burger' && !item.isSweetBurger) {
         if (item.selectedSauces && item.selectedSauces.length > 0) {
           message += `   Molhos: ${item.selectedSauces.join(', ')}`;
