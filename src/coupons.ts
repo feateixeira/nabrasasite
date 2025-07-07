@@ -15,7 +15,7 @@ export const availableCoupons: Coupon[] = [
     discount: 10,
     type: 'percentage',
     maxUses: 200,
-    validUntil: '2025-12-31T23:59:59',
+    validUntil: '2024-12-31T23:59:59',
     minOrderValue: 100,
     description: '10% de desconto em pedidos acima de R$ 100,00'
   },
