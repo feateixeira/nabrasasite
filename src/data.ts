@@ -146,6 +146,7 @@ const memoizedProducts: Product[] = [
     image: 'https://i.imgur.com/pujtyWe.jpg',
     type: 'drink' as const,
     drinkType: 'refri-1litro',
+    isUnavailable: true,
     variants: [
       { name: 'Suco Dell Vale Uva 1lt', price: 8 },
       { name: 'Suco Dell Vale Maracujá1lt', price: 8 },

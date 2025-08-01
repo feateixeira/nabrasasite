@@ -79,6 +79,7 @@ export const validateCoupon = (code: string, orderValue: number): { valid: boole
 
   // Atualiza o uso do cupom
   usage[code] = {
+    code: code,
     uses: couponUsage.uses + 1,
     lastUsed: now.toISOString()
   };

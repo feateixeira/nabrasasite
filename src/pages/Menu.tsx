@@ -75,6 +75,20 @@ export function Menu() {
   const sweets = products.filter(product => product.type === 'burger' && product.isSweetBurger);
 
   const openModal = (product: Product) => {
+    if (product.isUnavailable) {
+      toast.error('Este item está temporariamente indisponível', {
+        duration: 3000,
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
+      return;
+    }
+    
     setSelectedProduct(product);
     setSelectedSauces([]);
     setProductNote('');
@@ -414,10 +428,17 @@ export function Menu() {
                     key={product.id}
                     className={`bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer ${
                       index === allBurgers.length - 1 && allBurgers.length % 2 !== 0 ? 'md:col-span-2' : ''
-                    }`}
+                    } ${product.isUnavailable ? 'opacity-60' : ''}`}
                     onClick={() => openModal(product)}
                   >
-                    <div className="flex flex-col h-full">
+                    <div className="flex flex-col h-full relative">
+                      {product.isUnavailable && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                          <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Indisponível
+                          </div>
+                        </div>
+                      )}
                       <div className="h-48 w-full">
                         <ImageWithLoading
                           src={product.image}
@@ -446,8 +467,12 @@ export function Menu() {
                           <span className="text-lg font-bold text-gray-900 dark:text-white">
                             R$ {product.price.toFixed(2)}
                           </span>
-                          <button className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition-colors">
-                            Adicionar
+                          <button className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                            product.isUnavailable 
+                              ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                              : 'bg-red-600 text-white hover:bg-red-700'
+                          }`}>
+                            {product.isUnavailable ? 'Indisponível' : 'Adicionar'}
                           </button>
                         </div>
                       </div>
@@ -465,10 +490,17 @@ export function Menu() {
                     key={product.id}
                     className={`bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer ${
                       index === sides.length - 1 && sides.length % 2 !== 0 ? 'md:col-span-2' : ''
-                    }`}
+                    } ${product.isUnavailable ? 'opacity-60' : ''}`}
                     onClick={() => openModal(product)}
                   >
-                    <div className="flex flex-col h-full">
+                    <div className="flex flex-col h-full relative">
+                      {product.isUnavailable && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                          <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Indisponível
+                          </div>
+                        </div>
+                      )}
                       <div className="h-48 w-full">
                         <ImageWithLoading
                           src={product.image}
@@ -492,8 +524,12 @@ export function Menu() {
                           <span className="text-lg font-bold text-gray-900 dark:text-white">
                             A partir de R$ {product.price.toFixed(2)}
                           </span>
-                          <button className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition-colors">
-                            Adicionar
+                          <button className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                            product.isUnavailable 
+                              ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                              : 'bg-red-600 text-white hover:bg-red-700'
+                          }`}>
+                            {product.isUnavailable ? 'Indisponível' : 'Adicionar'}
                           </button>
                         </div>
                       </div>
@@ -511,10 +547,17 @@ export function Menu() {
                     key={product.id}
                     className={`bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer ${
                       index === drinks.length - 1 && drinks.length % 2 !== 0 ? 'md:col-span-2' : ''
-                    }`}
+                    } ${product.isUnavailable ? 'opacity-60' : ''}`}
                     onClick={() => openModal(product)}
                   >
-                    <div className="flex flex-col h-full">
+                    <div className="flex flex-col h-full relative">
+                      {product.isUnavailable && (
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-10">
+                          <div className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold">
+                            Indisponível
+                          </div>
+                        </div>
+                      )}
                       <div className="h-48 w-full">
                         <ImageWithLoading
                           src={product.image}
@@ -531,8 +574,12 @@ export function Menu() {
                           <span className="text-lg font-bold text-gray-900 dark:text-white">
                             R$ {product.price.toFixed(2)}
                           </span>
-                          <button className="bg-red-600 text-white px-3 py-1 rounded-lg text-sm hover:bg-red-700 transition-colors">
-                            Adicionar
+                          <button className={`px-3 py-1 rounded-lg text-sm transition-colors ${
+                            product.isUnavailable 
+                              ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
+                              : 'bg-red-600 text-white hover:bg-red-700'
+                          }`}>
+                            {product.isUnavailable ? 'Indisponível' : 'Adicionar'}
                           </button>
                         </div>
                       </div>
