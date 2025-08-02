@@ -92,7 +92,7 @@ export function Menu() {
     setSelectedProduct(product);
     setSelectedSauces([]);
     setProductNote('');
-    setSelectedVariant(product.variants ? product.variants[0] : null);
+    setSelectedVariant(product.variants ? product.variants.find(v => !v.isUnavailable) || null : null);
     setSelectedSize(product.burgerSizeGroup ? burgerSizes[product.burgerSizeGroup][0] : null);
     setSelectedPotatoOption(product.potatoOptions ? product.potatoOptions[0] : null);
     setIsTrio(false);
@@ -981,14 +981,37 @@ export function Menu() {
                     {selectedProduct.variants.map((variant) => (
                       <button
                         key={variant.name}
-                        onClick={() => setSelectedVariant(variant)}
-                        className={`w-full px-4 py-2 rounded-lg text-left ${
-                          selectedVariant?.name === variant.name
+                        onClick={() => {
+                          if (variant.isUnavailable) {
+                            toast.error('Esta opção está temporariamente indisponível', {
+                              duration: 3000,
+                              style: {
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                background: '#ef4444',
+                                color: 'white',
+                                border: '2px solid #b91c1c',
+                              }
+                            });
+                            return;
+                          }
+                          setSelectedVariant(variant);
+                        }}
+                        className={`w-full px-4 py-2 rounded-lg text-left relative ${
+                          variant.isUnavailable
+                            ? 'bg-gray-300 dark:bg-gray-600 text-gray-500 dark:text-gray-400 cursor-not-allowed'
+                            : selectedVariant?.name === variant.name
                             ? 'bg-red-600 text-white'
                             : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600'
                         }`}
+                        disabled={variant.isUnavailable}
                       >
                         {variant.name} - R$ {variant.price.toFixed(2)}
+                        {variant.isUnavailable && (
+                          <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs bg-red-600 text-white px-2 py-1 rounded">
+                            Indisponível
+                          </span>
+                        )}
                       </button>
                     ))}
                   </div>

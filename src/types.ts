@@ -27,6 +27,7 @@ export interface Product {
 export interface DrinkVariant {
   name: string;
   price: number;
+  isUnavailable?: boolean;
 }
 
 export interface SweetOption {

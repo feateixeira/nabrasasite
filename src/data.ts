@@ -241,11 +241,11 @@ const memoizedProducts: Product[] = [
       { name: 'Morango 330ml', price: 7 },
       { name: 'Maracujá 330ml', price: 7 },
       { name: 'Acerola 330ml', price: 7 },
-      { name: 'Abacaxi com Hortelã 330ml', price: 7 },
+      { name: 'Abacaxi com Hortelã 330ml', price: 7, isUnavailable: true },
       { name: 'Morango 500ml', price: 10 },
       { name: 'Maracujá 500ml', price: 10 },
       { name: 'Acerola 500ml', price: 10 },
-      { name: 'Abacaxi com Hortelã 500ml', price: 10 }
+      { name: 'Abacaxi com Hortelã 500ml', price: 10, isUnavailable: true }
     ]
   },
   {
