@@ -117,7 +117,6 @@ const memoizedProducts: Product[] = [
     drinkType: 'refri-600',
     variants: [
       { name: 'Coca-Cola 600ml', price: 7.5 },
-      { name: 'Coca-Cola Zero 600ml', price: 7.5 },
       { name: 'Guaraná 600ml', price: 7.5 }
     ]
   },
