@@ -175,17 +175,17 @@ const memoizedProducts: Product[] = [
       {
         name: 'P',
         price: 20.00,
-        description: 'Porção pequena de frango empanado (3 - 4 pedaços) + acompanha molhos barbecue e rosê'
+        description: 'Porção pequena de frango empanado (3 - 4 pedaços) + acompanha molhos Barbecue e Rosê'
       },
       {
         name: 'M',
         price: 37.00,
-        description: 'Porção média de frango empanado (4 - 6 pedaços) + acompanha molhos barbecue e rosê'
+        description: 'Porção média de frango empanado (4 - 6 pedaços) + acompanha molhos Barbecue e Rosê'
       },
       {
         name: 'G',
         price: 50.00,
-        description: 'Porção grande de frango empanado (6 - 8 pedaços) + acompanha molhos barbecue e rosê'
+        description: 'Porção grande de frango empanado (6 - 8 pedaços) + acompanha molhos Barbecue e Rosê'
       }
     ]
   },
