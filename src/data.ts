@@ -33,23 +33,6 @@ const memoizedProducts: Product[] = [
     burgerSizeGroup: 'group2'
   },
   {
-    id: '13',
-    name: 'Hambúrguer Nutella',
-    description: 'Pão Brioche, Nutella e Morangos',
-    price: 16.00,
-    image: 'https://imgur.com/W7018Tj.jpg',
-    type: 'burger' as const,
-    burgerSizeGroup: 'group3',
-    isSweetBurger: true,
-    sweetOptions: [
-      { 
-        name: 'Nutella', 
-        price: 16.00,
-        image: 'https://imgur.com/W7018Tj.jpg'
-      },
-    ]
-  },
-  {
     id: '5',
     name: 'Batata Frita Pequena',
     description: 'Porção de batatas fritas crocantes (150g)',
@@ -184,27 +167,25 @@ const memoizedProducts: Product[] = [
   {
     id: '14',
     name: 'Frango no Pote',
-    description: 'Filé de frango empanado com molho especial',
+    description: 'Filé de frango empanado com molho especial + acompanha molhos barbecue e rosê',
     price: 20.00,
     image: 'https://imgur.com/PwYPcuJ.jpg',
     type: 'side' as const,
-    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
-    maxSauces: 2,
     potatoOptions: [
       {
         name: 'P',
         price: 20.00,
-        description: 'Porção pequena de frango empanado (3 - 4 pedaços)'
+        description: 'Porção pequena de frango empanado (3 - 4 pedaços) + acompanha molhos barbecue e rosê'
       },
       {
         name: 'M',
         price: 37.00,
-        description: 'Porção média de frango empanado (4 - 6 pedaços)'
+        description: 'Porção média de frango empanado (4 - 6 pedaços) + acompanha molhos barbecue e rosê'
       },
       {
         name: 'G',
         price: 50.00,
-        description: 'Porção grande de frango empanado (6 - 8 pedaços)'
+        description: 'Porção grande de frango empanado (6 - 8 pedaços) + acompanha molhos barbecue e rosê'
       }
     ]
   },
@@ -273,23 +254,6 @@ const memoizedProducts: Product[] = [
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5'
   },
-  {
-    id: '18',
-    name: 'Kids',
-    description: 'Pão Brioche, Blend artesanal (90g), queijo cheddar, alface + Bala Finni',
-    price: 13.00,
-    image: 'https://imgur.com/fVIh7RO.jpg',
-    type: 'burger' as const,
-    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
-    burgerSizeGroup: 'group6',
-    comboOptions: [
-      {
-        name: 'Combo Kids',
-        price: 17.00,
-        description: 'Hambúrguer Kids + Suco de Caixinha 200ml (Uva ou Maracujá)'
-      }
-    ]
-  }
 ];
 
 // Função para carregar os produtos de forma lazy
