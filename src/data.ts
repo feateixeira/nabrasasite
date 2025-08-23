@@ -196,7 +196,7 @@ const memoizedProducts: Product[] = [
     price: 25.00,
     image: 'https://imgur.com/AlEjCem.jpg',
     type: 'side' as const,
-    specialTags: ['Super Especial', 'Muuuuuuuuuito Recheio'],
+    specialTags: ['Super Especial', 'Muuuito Recheio'],
     potatoOptions: [
       {
         name: 'M',
