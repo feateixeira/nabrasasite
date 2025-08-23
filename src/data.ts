@@ -1,4 +1,4 @@
-import { BurgerSize, SweetOption, Product, DrinkVariant, PotatoOption } from './types';
+import { BurgerSize, Product } from './types';
 
 // Memoização dos dados para evitar recálculos desnecessários
 const memoizedProducts: Product[] = [
