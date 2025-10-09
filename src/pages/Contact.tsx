@@ -11,34 +11,34 @@ const testimonials = [
     text: 'Melhor hambúrguer da cidade! Atendimento rápido e comida deliciosa. Recomendo demais.'
   },
   {
-    name: 'Mariana Silva',
+    name: 'Maria Helena',
     photo: 'https://randomuser.me/api/portraits/women/44.jpg',
     stars: 5,
     text: 'Os lanches são incríveis e o preço é justo. Sempre peço para minha família!'
   },
   {
-    name: 'João Pedro',
+    name: 'Fernando Pereira',
     photo: 'https://randomuser.me/api/portraits/men/85.jpg',
     stars: 4,
-    text: 'Muito bom! Só faltou chegar um pouquinho mais quente, mas estava delicioso.'
+    text: 'Sou cliente e os hambúrgueres de lá são muito bons vale a pena super indico.'
   },
   {
-    name: 'Ana Paula',
+    name: 'Keith',
     photo: 'https://randomuser.me/api/portraits/women/68.jpg',
     stars: 5,
-    text: 'Atendimento excelente e hambúrguer maravilhoso! Voltarei sempre.'
+    text: 'Ótimo atendimento, lanche maravilhoso! Sempre que posso vou lá!!'
   },
   {
-    name: 'Carlos Mendes',
+    name: 'Nayara Lorrany',
     photo: 'https://randomuser.me/api/portraits/men/41.jpg',
     stars: 5,
-    text: 'Entrega rápida e lanche muito saboroso. Recomendo!'
+    text: 'O hambúrguer e uma delícia 😋 no ponto certo e bem temperado!'
   },
   {
-    name: 'Fernanda Costa',
+    name: 'Aline Filhos',
     photo: 'https://randomuser.me/api/portraits/women/12.jpg',
     stars: 5,
-    text: 'Simplesmente perfeito! O melhor hambúrguer artesanal que já comi.'
+    text: 'O melhor da cidade!!!sabor maravilhoso!!!'
   },
 ];
 
@@ -184,7 +184,7 @@ export function Contact() {
       </div>
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-16">
-        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">O que nossos clientes dizem</h2>
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">O que nossos clientes dizem (tirados de avaliações do google)</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {testimonials.map((testimonial, index) => (
             <div key={index} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 flex flex-col items-center text-center">
