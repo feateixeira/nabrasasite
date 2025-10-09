@@ -1,6 +1,7 @@
 import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
+import { WelcomeModal } from './components/WelcomeModal';
 import { Menu } from './pages/Menu';
 import { Contact } from './pages/Contact';
 
@@ -23,6 +24,7 @@ function App() {
           }
         }}
       />
+      <WelcomeModal />
       <Header />
       <Routes>
         <Route path="/" element={<Menu />} />

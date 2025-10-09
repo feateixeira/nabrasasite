@@ -4,7 +4,7 @@ import { BurgerSize, Product } from './types';
 const memoizedProducts: Product[] = [
   {
     id: '1',
-    name: 'Na Brasa',
+    name: 'Na Brasa Clássico',
     description: 'Pão Brioche, Blend artesanal (130g), queijo cheddar, alface',
     price: 15.00,
     image: 'https://imgur.com/KDqnnFM.jpg',
@@ -16,7 +16,7 @@ const memoizedProducts: Product[] = [
     id: '2',
     name: 'Na Brasa Especial',
     description: 'Pão Brioche, Blend artesanal (130g), Queijo cheddar, Alface + Cebola caramelizada & Pedaços de Bacon',
-    price: 20.00,
+    price: 22.00,
     image: 'https://imgur.com/5Bzmmhy.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
@@ -26,7 +26,7 @@ const memoizedProducts: Product[] = [
     id: '3',
     name: 'Na Brasa Supremo',
     description: 'Pão Brioche, Blend Artesanal (130g), Queijo Cheddar, Alface + Cebola Roxa & Pedaços de Bacon',
-    price: 20.00,
+    price: 22.00,
     image: 'https://imgur.com/TeQVxPI.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
@@ -37,7 +37,7 @@ const memoizedProducts: Product[] = [
     name: 'Batata Frita Pequena',
     description: 'Porção de batatas fritas crocantes (150g)',
     price: 8.00,
-    image: 'https://imgur.com/Sergi99.jpg',
+    image: 'https://imgur.com/i85TfIw.jpg',
     type: 'side' as const,
     isLoadable: true,
     loadedPrice: 12.00,
@@ -57,7 +57,7 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/AKh6NLI.jpg',
     type: 'side' as const,
     isLoadable: true,
-    loadedPrice: 20.00,
+    loadedPrice: 16.00,
     potatoOptions: [
       {
         name: 'Normal',
@@ -66,7 +66,7 @@ const memoizedProducts: Product[] = [
       },
       {
         name: 'Recheada',
-        price: 21.00,
+        price: 22.00,
         description: 'Porção de batatas fritas crocantes (300g) com queijo cheddar e bacon crocante'
       }
     ]
@@ -75,20 +75,20 @@ const memoizedProducts: Product[] = [
     id: '7',
     name: 'Batata Frita Grande',
     description: 'Porção de batatas fritas crocantes (400g)',
-    price: 22.00,
+    price: 25.00,
     image: 'https://imgur.com/PTMmqda.jpg',
     type: 'side' as const,
     isLoadable: true,
-    loadedPrice: 26.00,
+    loadedPrice: 25.00,
     potatoOptions: [
       {
         name: 'Normal',
-        price: 22.00,
+        price: 25.00,
         description: 'Porção de batatas fritas crocantes (400g)'
       },
       {
         name: 'Recheada',
-        price: 30.00,
+        price: 32.00,
         description: 'Porção de batatas fritas crocantes (400g) com queijo cheddar e bacon crocante'
       }
     ]
@@ -116,8 +116,8 @@ const memoizedProducts: Product[] = [
     type: 'drink' as const,
     drinkType: 'refri-600',
     variants: [
-      { name: 'Coca-Cola 600ml', price: 7.5 },
-      { name: 'Guaraná 600ml', price: 7.5 }
+      { name: 'Coca-Cola 600ml', price: 8 },
+      { name: 'Guaraná 600ml', price: 8 }
     ]
   },
   {
@@ -166,25 +166,25 @@ const memoizedProducts: Product[] = [
   {
     id: '14',
     name: 'Frango no Pote',
-    description: 'Filé de frango empanado com molho especial + acompanha molhos barbecue e rosê',
+    description: 'Filé de peito de frango empanado na farinha Panko com temperos especiais + acompanha molhos barbecue e rosê',
     price: 20.00,
-    image: 'https://imgur.com/PwYPcuJ.jpg',
+    image: 'https://imgur.com/QOI8aaw.jpg',
     type: 'side' as const,
     potatoOptions: [
       {
         name: 'P',
         price: 20.00,
-        description: 'Porção pequena de frango empanado (3 - 4 pedaços) + acompanha molhos Barbecue e Rosê'
+        description: 'Porção pequena de frango empanado (200gramas em média) + acompanha molhos Barbecue e Rosê'
       },
       {
         name: 'M',
-        price: 37.00,
-        description: 'Porção média de frango empanado (4 - 6 pedaços) + acompanha molhos Barbecue e Rosê'
+        price: 30.00,
+        description: 'Porção média de frango empanado (500gramas em média) + acompanha molhos Barbecue e Rosê'
       },
       {
         name: 'G',
         price: 50.00,
-        description: 'Porção grande de frango empanado (6 - 8 pedaços) + acompanha molhos Barbecue e Rosê'
+        description: 'Porção grande de frango empanado (750gramas em média) + acompanha molhos Barbecue e Rosê'
       }
     ]
   },
@@ -199,13 +199,13 @@ const memoizedProducts: Product[] = [
     potatoOptions: [
       {
         name: 'M',
-        price: 25.00,
-        description: 'Porção média de batata frita com frango, cheddar e bacon (500g)'
+        price: 30.00,
+        description: 'Porção média de batata frita com frango, cheddar e bacon'
       },
       {
         name: 'G',
-        price: 37.00,
-        description: 'Porção grande de batata frita com frango, cheddar e bacon (700g)'
+        price: 45.00,
+        description: 'Porção grande de batata frita com frango, cheddar e bacon'
       }
     ]
   },
@@ -246,13 +246,120 @@ const memoizedProducts: Product[] = [
   {
     id: '16',
     name: 'Na Brasa Frango',
-    description: 'Pão Brioche, Filé de frango empanado (130g), queijo cheddar, alface',
-    price: 20.00,
-    image: 'https://imgur.com/6zBVnyS.jpg',
+    description: 'Pão Brioche, Filé de frango empanado, queijo cheddar & alface',
+    price: 22.00,
+    image: 'https://imgur.com/hN0qVs5.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5'
   },
+  {
+    id: '22',
+    name: 'Na Brasa Frango Supremo',
+    description: 'Pão Brioche, Filé de frango empanado, queijo cheddar, alface, tomate & cebola roxa.',
+    price: 24.00,
+    image: 'https://imgur.com/5EtACiS.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group5',
+    specialTags: ['🔥 NOVIDADE']
+  },
+  {
+    id: '23',
+    name: 'Na Brasa Frango Fit',
+    description: 'Pão Brioche, Blend de frango assado, queijo cheddar, alface & tomate.',
+    price: 25.00,
+    image: 'https://imgur.com/0Rs4y5z.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group8',
+    specialTags: ['🔥 NOVIDADE']
+  },
+  {
+    id: '21',
+    name: 'Na Brasa Smash',
+    description: 'Pão Brioche ou Australiano, smash (90g), Queijo cheddar & farofa de Bacon.',
+    price: 14.00,
+    image: 'https://imgur.com/Ca0yQzd.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group7',
+    specialTags: ['🔥 NOVIDADE']
+  },
+  {
+    id: '24',
+    name: 'Na Brasa Salada',
+    description: 'Pão Brioche, Blend (130g), Queijo cheddar, alface & tomate.',
+    price: 16.00,
+    image: 'https://imgur.com/FYR1uNM.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group1',
+    specialTags: ['🔥 NOVIDADE']
+  },
+  {
+    id: '25',
+    name: 'Cubos de Frango',
+    description: 'Peito de frango em cubos empanados na farinha panko com tempero especial + acompanha molhos rose e barbecue',
+    price: 25.00,
+    image: 'https://imgur.com/KQcmsNh.jpg',
+    type: 'side' as const,
+    specialTags: ['🔥 NOVIDADE'],
+    potatoOptions: [
+      {
+        name: 'M',
+        price: 25.00,
+        description: 'Porção média de cubos de frango empanados + acompanha molhos rose e barbecue'
+      },
+      {
+        name: 'G',
+        price: 40.00,
+        description: 'Porção grande de cubos de frango empanados + acompanha molhos rose e barbecue'
+      }
+    ]
+  },
+  {
+    id: '26',
+    name: 'Cebolas Empanadas',
+    description: 'Cebolas empanadas crocantes + acompanha ketchup',
+    price: 20.00,
+    image: 'https://imgur.com/nVhfvNe.jpg',
+    type: 'side' as const,
+    specialTags: ['🔥 NOVIDADE'],
+    potatoOptions: [
+      {
+        name: 'M',
+        price: 20.00,
+        description: '300g de cebolas empanadas + acompanha ketchup'
+      },
+      {
+        name: 'G',
+        price: 30.00,
+        description: '500g de cebolas empanadas + acompanha ketchup'
+      }
+    ]
+  },
+  {
+    id: '27',
+    name: 'Cebolas Empanadas + Fritas',
+    description: 'Cebolas empanadas e batatas fritas + acompanha ketchup',
+    price: 30.00,
+    image: 'https://imgur.com/b43RRwa.jpg',
+    type: 'side' as const,
+    specialTags: ['🔥 NOVIDADE'],
+    potatoOptions: [
+      {
+        name: 'M',
+        price: 30.00,
+        description: '400g de cebolas empanadas & batatas fritas + acompanha ketchup'
+      },
+      {
+        name: 'G',
+        price: 50.00,
+        description: '700g de cebolas empanadas & batatas fritas + acompanha ketchup'
+      }
+    ]
+  }
 ];
 
 // Função para carregar os produtos de forma lazy
@@ -275,8 +382,8 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
   ],
   group2: [
     { name: 'Simples', priceIncrease: 0 },
-    { name: 'Duplo', priceIncrease: 7 },
-    { name: 'Triplo', priceIncrease: 12 }
+    { name: 'Duplo', priceIncrease: 8 },
+    { name: 'Triplo', priceIncrease: 13 }
   ],
   group3: [
     { name: 'Nutella', priceIncrease: 0 },
@@ -289,11 +396,20 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
   ],
   group5: [
     { name: 'Simples', priceIncrease: 0 },
-    { name: 'Duplo', priceIncrease: 7 },
-    { name: 'Triplo', priceIncrease: 12 }
+    { name: 'Duplo', priceIncrease: 8 }
   ],
   group6: [
     { name: 'Simples', priceIncrease: 0 }
+  ],
+  group7: [
+    { name: 'Simples', priceIncrease: 0 },
+    { name: 'Duplo', priceIncrease: 4 },
+    { name: 'Triplo', priceIncrease: 11 }
+  ],
+  group8: [
+    { name: 'Simples', priceIncrease: 0 },
+    { name: 'Duplo', priceIncrease: 11 },
+    { name: 'Triplo', priceIncrease: 15 }
   ]
 };
 
