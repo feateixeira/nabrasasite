@@ -262,7 +262,8 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5',
-    specialTags: ['🔥 NOVIDADE']
+    specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
   },
   {
     id: '23',
@@ -273,7 +274,8 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group8',
-    specialTags: ['🔥 NOVIDADE']
+    specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
   },
   {
     id: '21',
@@ -284,7 +286,8 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group7',
-    specialTags: ['🔥 NOVIDADE']
+    specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
   },
   {
     id: '24',
@@ -295,7 +298,8 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group1',
-    specialTags: ['🔥 NOVIDADE']
+    specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
   },
   {
     id: '25',
@@ -305,6 +309,7 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/KQcmsNh.jpg',
     type: 'side' as const,
     specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
@@ -326,6 +331,7 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/nVhfvNe.jpg',
     type: 'side' as const,
     specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
@@ -347,6 +353,7 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/b43RRwa.jpg',
     type: 'side' as const,
     specialTags: ['🔥 NOVIDADE'],
+    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
