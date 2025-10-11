@@ -128,7 +128,6 @@ const memoizedProducts: Product[] = [
     image: 'https://i.imgur.com/pujtyWe.jpg',
     type: 'drink' as const,
     drinkType: 'refri-1litro',
-    isUnavailable: true,
     variants: [
       { name: 'Suco Dell Vale Uva 1lt', price: 8 },
       { name: 'Suco Dell Vale Maracujá1lt', price: 8 },
@@ -221,11 +220,9 @@ const memoizedProducts: Product[] = [
       { name: 'Morango 330ml', price: 7 },
       { name: 'Maracujá 330ml', price: 7 },
       { name: 'Acerola 330ml', price: 7 },
-      { name: 'Abacaxi com Hortelã 330ml', price: 7, isUnavailable: true },
       { name: 'Morango 500ml', price: 10 },
       { name: 'Maracujá 500ml', price: 10 },
-      { name: 'Acerola 500ml', price: 10 },
-      { name: 'Abacaxi com Hortelã 500ml', price: 10, isUnavailable: true }
+      { name: 'Acerola 500ml', price: 10 }
     ]
   },
   {
@@ -263,7 +260,6 @@ const memoizedProducts: Product[] = [
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5',
     specialTags: ['🔥 NOVIDADE'],
-    isUnavailable: true,
   },
   {
     id: '23',
@@ -274,7 +270,7 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group8',
-    specialTags: ['🔥 NOVIDADE'],
+    specialTags: ['EM BREVE NO CARDÁPIO'],
     isUnavailable: true,
   },
   {
@@ -286,7 +282,7 @@ const memoizedProducts: Product[] = [
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group7',
-    specialTags: ['🔥 NOVIDADE'],
+    specialTags: ['EM BREVE NO CARDÁPIO'],
     isUnavailable: true,
   },
   {
@@ -299,7 +295,6 @@ const memoizedProducts: Product[] = [
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group1',
     specialTags: ['🔥 NOVIDADE'],
-    isUnavailable: true,
   },
   {
     id: '25',
@@ -308,7 +303,7 @@ const memoizedProducts: Product[] = [
     price: 25.00,
     image: 'https://imgur.com/KQcmsNh.jpg',
     type: 'side' as const,
-    specialTags: ['🔥 NOVIDADE'],
+    specialTags: ['EM BREVE NO CARDÁPIO'],
     isUnavailable: true,
     potatoOptions: [
       {
@@ -331,7 +326,6 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/nVhfvNe.jpg',
     type: 'side' as const,
     specialTags: ['🔥 NOVIDADE'],
-    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
@@ -353,7 +347,6 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/b43RRwa.jpg',
     type: 'side' as const,
     specialTags: ['🔥 NOVIDADE'],
-    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
@@ -367,6 +360,39 @@ const memoizedProducts: Product[] = [
       }
     ]
   }
+  ,
+  {
+    id: '28',
+    name: 'Mini Chickens Na Brasa',
+    description: 'MIni Chicken fritos e crôcantes',
+    price: 30.00,
+    image: 'https://imgur.com/5lLNwZy.jpg',
+    type: 'side' as const,
+    specialTags: ['🔥 NOVIDADE'],
+    potatoOptions: [
+      {
+        name: 'M',
+        price: 25.00,
+        description: '400g de Mini Chickens Na Brasa, fritos e crôcantes'
+      },
+      {
+        name: 'G',
+        price: 40.00,
+        description: '700g de Mini Chickens Na Brasa, fritos e crôcantes'
+      }
+    ]
+  },
+  {
+    id: '29',
+    name: 'Na Brasa Eno',
+    description: 'Pão Brioche, 4 Blend (130g), 4 Queijo cheddar, farofa de bacon, aneis de cebolas fritos & alface.',
+    price: 42.00,
+    image: 'https://imgur.com/rWtnci3.jpg',
+    type: 'burger' as const,
+    availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
+    burgerSizeGroup: 'group9',
+    specialTags: ['🔥 NOVIDADE', '🧌 MOOOONSTRO'],
+  },
 ];
 
 // Função para carregar os produtos de forma lazy
@@ -417,6 +443,10 @@ export const burgerSizes: Record<string, BurgerSize[]> = {
     { name: 'Simples', priceIncrease: 0 },
     { name: 'Duplo', priceIncrease: 11 },
     { name: 'Triplo', priceIncrease: 15 }
+  ]
+  ,
+  group9: [
+    { name: 'Monstro', priceIncrease: 0 }
   ]
 };
 
