@@ -410,7 +410,7 @@ export function Menu() {
     message += `*Forma de pagamento:* ${paymentMethod}\n`;
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/5561993709608?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/5561999133181?text=${encodedMessage}`, '_blank');
   };
 
   const allBurgers = [...burgers, ...sweets];
