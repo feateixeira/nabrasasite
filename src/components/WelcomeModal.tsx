@@ -73,6 +73,10 @@ export function WelcomeModal() {
               <span className="text-orange-500">🔥</span>
               <span>Novos hambúrgueres incríveis</span>
             </div>
+            <div className="flex items-center gap-2 text-sm text-gray-700">
+              <span className="text-orange-500">🔥</span>
+              <span>Novo número para contato</span>
+            </div>
           </div>
 
           {/* Botão principal */}
