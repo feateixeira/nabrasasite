@@ -1,9 +1,10 @@
-import { useState, lazy, Suspense, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Plus, Minus, X, Send, Store, MapPin } from 'lucide-react';
 import { getProducts, burgerSizes, drinkOptions } from '../data';
 import { CartItem, Product, DrinkVariant, BurgerSize, PotatoOption } from '../types';
 import { toast } from 'sonner';
 import { validateCoupon } from '../coupons';
+import { SpookyTitleEffect, SpookyCartEffect } from '../components/SpookyEffects';
 
 // Componente de loading para imagens
 const ImageWithLoading = ({ src, alt, className }: { src: string; alt: string; className?: string }) => {
@@ -421,7 +422,9 @@ export function Menu() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-12">
             <section>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Hambúrgueres</h2>
+              <SpookyTitleEffect>
+                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Hambúrgueres</h2>
+              </SpookyTitleEffect>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {allBurgers.map((product, index) => (
                   <div
@@ -483,7 +486,9 @@ export function Menu() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Acompanhamentos</h2>
+              <SpookyTitleEffect>
+                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Acompanhamentos</h2>
+              </SpookyTitleEffect>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {sides.map((product, index) => (
                   <div
@@ -540,7 +545,9 @@ export function Menu() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Bebidas</h2>
+              <SpookyTitleEffect>
+                <h2 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Bebidas</h2>
+              </SpookyTitleEffect>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {drinks.map((product, index) => (
                   <div
@@ -591,7 +598,8 @@ export function Menu() {
           </div>
 
           <div className="lg:col-span-1 lg:pt-12">
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24">
+            <SpookyCartEffect>
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 sticky top-24">
               <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Seu Pedido</h2>
               
               {cart.length === 0 ? (
@@ -805,7 +813,8 @@ export function Menu() {
                   </button>
                 </>
               )}
-            </div>
+              </div>
+            </SpookyCartEffect>
           </div>
         </div>
       </div>

@@ -169,7 +169,6 @@ const memoizedProducts: Product[] = [
     price: 20.00,
     image: 'https://imgur.com/QOI8aaw.jpg',
     type: 'side' as const,
-    isUnavailable: true,
     potatoOptions: [
       {
         name: 'P',
@@ -196,7 +195,6 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/AlEjCem.jpg',
     type: 'side' as const,
     specialTags: ['Super Especial', 'Muuuito Recheio'],
-    isUnavailable: true,
     potatoOptions: [
       {
         name: 'M',
@@ -250,7 +248,6 @@ const memoizedProducts: Product[] = [
     image: 'https://imgur.com/hN0qVs5.jpg',
     type: 'burger' as const,
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
-    isUnavailable: true,
     burgerSizeGroup: 'group5'
   
   },
@@ -264,7 +261,6 @@ const memoizedProducts: Product[] = [
     availableSauces: ['Bacon', 'Alho', 'Ervas', 'Mostarda & Mel'],
     burgerSizeGroup: 'group5',
     specialTags: ['🔥 NOVIDADE'],
-    isUnavailable: true,
   },
   {
     id: '24',

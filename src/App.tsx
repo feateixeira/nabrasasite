@@ -2,12 +2,15 @@ import { Routes, Route } from 'react-router-dom';
 import { Toaster } from 'sonner';
 import { Header } from './components/Header';
 import { WelcomeModal } from './components/WelcomeModal';
+import { HalloweenAnimations } from './components/HalloweenAnimations';
+import { HalloweenAtmosphere } from './components/HalloweenAtmosphere';
+import { HalloweenExtras } from './components/HalloweenExtras';
 import { Menu } from './pages/Menu';
 import { Contact } from './pages/Contact';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200">
+    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-red-50 to-amber-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 transition-colors duration-200 relative">
       <Toaster 
         position="top-center"
         expand={true}
@@ -24,6 +27,9 @@ function App() {
           }
         }}
       />
+      <HalloweenAtmosphere />
+      <HalloweenAnimations />
+      <HalloweenExtras />
       <WelcomeModal />
       <Header />
       <Routes>
