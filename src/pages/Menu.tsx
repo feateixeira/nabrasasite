@@ -304,7 +304,7 @@ export function Menu() {
 
   const total = subtotal + (deliveryType === 'delivery' ? DELIVERY_FEE : 0) - appliedDiscount;
 
-  const handleWhatsAppCheckout = () => {
+  const handleWhatsAppCheckout = async () => {
     if (cart.length === 0) {
       toast.error('Adicione itens ao carrinho', {
         duration: 5000,
@@ -410,6 +410,64 @@ export function Menu() {
 
     message += `*Forma de pagamento:* ${paymentMethod}\n`;
 
+    // Enviar pedido para o sistema
+    try {
+      const whatsappText = message;
+      const establishmentId = "c1b2a3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d"; // ID do estabelecimento Na Brasa
+
+      const response = await fetch('https://tndiwjznitnualtorbpk.supabase.co/functions/v1/import-whatsapp-order', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          whatsappText: whatsappText,
+          establishmentId: establishmentId
+        })
+      });
+
+      const data = await response.json();
+      
+      if (data.success) {
+        console.log('Pedido enviado para o sistema!', data);
+        toast.success('Pedido enviado para o sistema com sucesso!', {
+          duration: 3000,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            background: '#10b981',
+            color: 'white',
+            border: '2px solid #059669',
+          }
+        });
+      } else {
+        console.error('Erro ao enviar pedido:', data.error);
+        toast.error('Erro ao enviar pedido para o sistema', {
+          duration: 3000,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            background: '#ef4444',
+            color: 'white',
+            border: '2px solid #b91c1c',
+          }
+        });
+      }
+    } catch (error) {
+      console.error('Erro na requisição:', error);
+      toast.error('Erro de conexão ao enviar pedido', {
+        duration: 3000,
+        style: {
+          fontSize: '16px',
+          fontWeight: 'bold',
+          background: '#ef4444',
+          color: 'white',
+          border: '2px solid #b91c1c',
+        }
+      });
+    }
+
+    // Abrir WhatsApp com o pedido
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/5561993709608?text=${encodedMessage}`, '_blank');
   };
