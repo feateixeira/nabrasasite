@@ -217,12 +217,12 @@ const memoizedProducts: Product[] = [
     type: 'drink' as const,
     drinkType: 'suco',
     variants: [
-      { name: 'Morango 330ml', price: 7 },
-      { name: 'Maracujá 330ml', price: 7 },
-      { name: 'Acerola 330ml', price: 7 },
-      { name: 'Morango 500ml', price: 10 },
-      { name: 'Maracujá 500ml', price: 10 },
-      { name: 'Acerola 500ml', price: 10 }
+      { name: 'Suco de Morango 330ml', price: 7 },
+      { name: 'Suco de Maracujá 330ml', price: 7 },
+      { name: 'Suco de Acerola 330ml', price: 7 },
+      { name: 'Suco de Morango 500ml', price: 10 },
+      { name: 'Suco de Maracujá 500ml', price: 10 },
+      { name: 'Suco de Acerola 500ml', price: 10 }
     ]
   },
   {
@@ -234,10 +234,10 @@ const memoizedProducts: Product[] = [
     type: 'drink' as const,
     drinkType: 'creme',
     variants: [
-      { name: 'Maracujá 330ml', price: 8 },
-      { name: 'Morango 330ml', price: 8 },
-      { name: 'Maracujá 500ml', price: 12 },
-      { name: 'Morango 500ml', price: 12 }
+      { name: 'Creme de Maracujá 330ml', price: 8 },
+      { name: 'Creme de Morango 330ml', price: 8 },
+      { name: 'Creme de Maracujá 500ml', price: 12 },
+      { name: 'Creme de Morango 500ml', price: 12 }
     ]
   },
   {

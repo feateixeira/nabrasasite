@@ -488,7 +488,7 @@ const handleWhatsAppCheckout = async () => {
       message += ` - ${item.selectedSize.name}`;
     }
     
-    if (item.selectedVariant) {
+    if (item.selectedVariant && item.type !== 'drink') {
       message += ` - ${item.selectedVariant.name}`;
     }
     
@@ -779,7 +779,7 @@ return (
                             <div className="flex justify-between items-start">
                               <span className="font-medium text-sm dark:text-white truncate">
                                 {item.name}
-                                {item.selectedVariant && (
+                                {item.selectedVariant && item.type !== 'drink' && (
                                   <span className="text-gray-600 dark:text-gray-400"> - {item.selectedVariant.name}</span>
                                 )}
                                 {item.selectedSize && (
