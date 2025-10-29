@@ -100,7 +100,7 @@ export function Contact() {
                   </div>
                   <div>
                     <p className="font-medium text-gray-900 dark:text-white">Telefone</p>
-                    <p className="text-gray-600 dark:text-gray-400">(61) 9913-3181</p>
+                    <p className="text-gray-600 dark:text-gray-400">(61) 99370-9608</p>
                   </div>
                 </div>
 

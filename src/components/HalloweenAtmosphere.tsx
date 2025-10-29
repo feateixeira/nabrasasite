@@ -1,8 +1,10 @@
 import React from 'react';
 
 // Componente de Partículas Flutuantes - MAIORES E MAIS DINÂMICAS
-export const FloatingParticles: React.FC = () => {
-  const particles = Array.from({ length: 25 }, (_, i) => (
+export const FloatingParticles: React.FC<{ multiplier?: number }> = ({ multiplier = 1 }) => {
+  const base = 25;
+  const count = Math.max(0, Math.floor(base * multiplier));
+  const particles = Array.from({ length: count }, (_, i) => (
     <div
       key={i}
       className="absolute pointer-events-none z-5"
@@ -82,8 +84,10 @@ export const FogEffect: React.FC = () => {
 };
 
 // Componente de Estrelas Piscantes - MAIS E MAIORES
-export const TwinklingStars: React.FC = () => {
-  const stars = Array.from({ length: 35 }, (_, i) => (
+export const TwinklingStars: React.FC<{ multiplier?: number }> = ({ multiplier = 1 }) => {
+  const base = 35;
+  const count = Math.max(0, Math.floor(base * multiplier));
+  const stars = Array.from({ length: count }, (_, i) => (
     <div
       key={i}
       className="absolute pointer-events-none z-5"
@@ -106,12 +110,26 @@ export const TwinklingStars: React.FC = () => {
 
 // Componente principal que agrupa todos os efeitos atmosféricos
 export const HalloweenAtmosphere: React.FC = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const apply = () => setIsMobile(mq.matches);
+    apply();
+    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener('change', apply) : mq.removeListener(apply);
+    };
+  }, []);
+
+  const multiplier = isMobile ? 0.4 : 1;
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      <FloatingParticles />
+      <FloatingParticles multiplier={multiplier} />
       <MovingShadows />
       <FogEffect />
-      <TwinklingStars />
+      <TwinklingStars multiplier={multiplier} />
     </div>
   );
 };

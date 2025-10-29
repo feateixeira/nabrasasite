@@ -187,52 +187,119 @@ export const Firefly: React.FC<{ delay?: number; size?: 'small' | 'medium' | 'la
 
 // Componente principal que agrupa todas as animações - MAIS ELEMENTOS
 export const HalloweenAnimations: React.FC = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const apply = () => setIsMobile(mq.matches);
+    apply();
+    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener('change', apply) : mq.removeListener(apply);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
-      {/* Morcegos voando - MAIS E MAIORES */}
-      <FlyingBat delay={0} duration={10} size="large" />
-      <FlyingBat delay={2} duration={12} size="medium" />
-      <FlyingBat delay={4} duration={8} size="large" />
-      <FlyingBat delay={6} duration={11} size="medium" />
-      <FlyingBat delay={8} duration={9} size="large" />
-      <FlyingBat delay={10} duration={13} size="small" />
+      {/* Morcegos voando */}
+      {isMobile ? (
+        <>
+          <FlyingBat delay={0} duration={10} size="medium" />
+          <FlyingBat delay={4} duration={11} size="small" />
+        </>
+      ) : (
+        <>
+          <FlyingBat delay={0} duration={10} size="large" />
+          <FlyingBat delay={2} duration={12} size="medium" />
+          <FlyingBat delay={4} duration={8} size="large" />
+          <FlyingBat delay={6} duration={11} size="medium" />
+          <FlyingBat delay={8} duration={9} size="large" />
+          <FlyingBat delay={10} duration={13} size="small" />
+        </>
+      )}
       
-      {/* Teias de aranha nos cantos - MAIORES */}
-      <SpiderWeb position="top-left" />
-      <SpiderWeb position="top-right" />
-      <SpiderWeb position="bottom-left" />
-      <SpiderWeb position="bottom-right" />
+      {/* Teias de aranha nos cantos */}
+      {isMobile ? (
+        <>
+          <SpiderWeb position="top-left" />
+          <SpiderWeb position="bottom-right" />
+        </>
+      ) : (
+        <>
+          <SpiderWeb position="top-left" />
+          <SpiderWeb position="top-right" />
+          <SpiderWeb position="bottom-left" />
+          <SpiderWeb position="bottom-right" />
+        </>
+      )}
       
-      {/* Fantasmas flutuantes - MAIS E MAIORES */}
-      <FloatingGhost delay={0} size="large" />
-      <FloatingGhost delay={3} size="medium" />
-      <FloatingGhost delay={6} size="large" />
-      <FloatingGhost delay={9} size="small" />
+      {/* Fantasmas flutuantes */}
+      {isMobile ? (
+        <>
+          <FloatingGhost delay={0} size="medium" />
+          <FloatingGhost delay={6} size="small" />
+        </>
+      ) : (
+        <>
+          <FloatingGhost delay={0} size="large" />
+          <FloatingGhost delay={3} size="medium" />
+          <FloatingGhost delay={6} size="large" />
+          <FloatingGhost delay={9} size="small" />
+        </>
+      )}
       
-      {/* Caveiras flutuantes - MAIS E MAIORES */}
-      <FloatingSkull delay={1} size="large" />
-      <FloatingSkull delay={4} size="medium" />
-      <FloatingSkull delay={7} size="large" />
+      {/* Caveiras flutuantes */}
+      {isMobile ? (
+        <FloatingSkull delay={1} size="medium" />
+      ) : (
+        <>
+          <FloatingSkull delay={1} size="large" />
+          <FloatingSkull delay={4} size="medium" />
+          <FloatingSkull delay={7} size="large" />
+        </>
+      )}
       
-      {/* Zumbis caminhando - MAIS E MAIORES */}
-      <WalkingZombie delay={0} size="large" />
-      <WalkingZombie delay={7} size="medium" />
-      <WalkingZombie delay={14} size="large" />
+      {/* Zumbis caminhando */}
+      {isMobile ? (
+        <WalkingZombie delay={0} size="medium" />
+      ) : (
+        <>
+          <WalkingZombie delay={0} size="large" />
+          <WalkingZombie delay={7} size="medium" />
+          <WalkingZombie delay={14} size="large" />
+        </>
+      )}
       
-      {/* Abóboras iluminadas - MAIORES */}
-      <GlowingPumpkin position="left" />
-      <GlowingPumpkin position="right" />
+      {/* Abóboras iluminadas */}
+      {isMobile ? (
+        <GlowingPumpkin position="right" />
+      ) : (
+        <>
+          <GlowingPumpkin position="left" />
+          <GlowingPumpkin position="right" />
+        </>
+      )}
       
-      {/* Vaga-lumes piscando - MAIS E MAIORES */}
-      <Firefly delay={0} size="medium" />
-      <Firefly delay={0.5} size="large" />
-      <Firefly delay={1} size="medium" />
-      <Firefly delay={1.5} size="small" />
-      <Firefly delay={2} size="large" />
-      <Firefly delay={2.5} size="medium" />
-      <Firefly delay={3} size="large" />
-      <Firefly delay={3.5} size="small" />
-      <Firefly delay={4} size="medium" />
+      {/* Vaga-lumes piscando */}
+      {isMobile ? (
+        <>
+          <Firefly delay={0} size="medium" />
+          <Firefly delay={1.5} size="small" />
+          <Firefly delay={3} size="medium" />
+        </>
+      ) : (
+        <>
+          <Firefly delay={0} size="medium" />
+          <Firefly delay={0.5} size="large" />
+          <Firefly delay={1} size="medium" />
+          <Firefly delay={1.5} size="small" />
+          <Firefly delay={2} size="large" />
+          <Firefly delay={2.5} size="medium" />
+          <Firefly delay={3} size="large" />
+          <Firefly delay={3.5} size="small" />
+          <Firefly delay={4} size="medium" />
+        </>
+      )}
     </div>
   );
 };

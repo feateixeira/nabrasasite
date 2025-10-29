@@ -29,7 +29,7 @@ export function Header() {
     <header className="bg-white/80 dark:bg-gray-900/90 backdrop-blur-md shadow-sm sticky top-0 z-40 transition-colors duration-200">
       <div className="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center">
-          <Link to="/nabrasa" className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
           <img src="https://imgur.com/yt8vg04.jpg" width="80px" alt="logo na brasa"/>
             <div>
               <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Na Brasa®</h1>

@@ -116,36 +116,87 @@ export const MagicCrystal: React.FC<{ delay?: number }> = ({ delay = 0 }) => {
 
 // Componente principal que agrupa todos os elementos extras
 export const HalloweenExtras: React.FC = () => {
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  React.useEffect(() => {
+    const mq = window.matchMedia('(max-width: 640px)');
+    const apply = () => setIsMobile(mq.matches);
+    apply();
+    mq.addEventListener ? mq.addEventListener('change', apply) : mq.addListener(apply);
+    return () => {
+      mq.removeEventListener ? mq.removeEventListener('change', apply) : mq.removeListener(apply);
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
       {/* Aranhas descendo */}
-      <DescendingSpider delay={0} />
-      <DescendingSpider delay={4} />
-      <DescendingSpider delay={8} />
+      {isMobile ? (
+        <DescendingSpider delay={0} />
+      ) : (
+        <>
+          <DescendingSpider delay={0} />
+          <DescendingSpider delay={4} />
+          <DescendingSpider delay={8} />
+        </>
+      )}
       
       {/* Vampiros voando */}
-      <FlyingVampire delay={1} />
-      <FlyingVampire delay={7} />
+      {isMobile ? (
+        <FlyingVampire delay={1} />
+      ) : (
+        <>
+          <FlyingVampire delay={1} />
+          <FlyingVampire delay={7} />
+        </>
+      )}
       
       {/* Bruxas voando */}
-      <FlyingWitch delay={2} />
-      <FlyingWitch delay={9} />
+      {isMobile ? (
+        <FlyingWitch delay={2} />
+      ) : (
+        <>
+          <FlyingWitch delay={2} />
+          <FlyingWitch delay={9} />
+        </>
+      )}
       
       {/* Gatos pretos */}
-      <BlackCat delay={3} />
-      <BlackCat delay={6} />
-      <BlackCat delay={11} />
+      {isMobile ? (
+        <BlackCat delay={6} />
+      ) : (
+        <>
+          <BlackCat delay={3} />
+          <BlackCat delay={6} />
+          <BlackCat delay={11} />
+        </>
+      )}
       
       {/* Olhos brilhantes */}
-      <GlowingEyes delay={0.5} />
-      <GlowingEyes delay={2.5} />
-      <GlowingEyes delay={5} />
-      <GlowingEyes delay={7.5} />
+      {isMobile ? (
+        <>
+          <GlowingEyes delay={0.5} />
+          <GlowingEyes delay={5} />
+        </>
+      ) : (
+        <>
+          <GlowingEyes delay={0.5} />
+          <GlowingEyes delay={2.5} />
+          <GlowingEyes delay={5} />
+          <GlowingEyes delay={7.5} />
+        </>
+      )}
       
       {/* Cristais mágicos */}
-      <MagicCrystal delay={1.5} />
-      <MagicCrystal delay={4.5} />
-      <MagicCrystal delay={8.5} />
+      {isMobile ? (
+        <MagicCrystal delay={4.5} />
+      ) : (
+        <>
+          <MagicCrystal delay={1.5} />
+          <MagicCrystal delay={4.5} />
+          <MagicCrystal delay={8.5} />
+        </>
+      )}
     </div>
   );
 };

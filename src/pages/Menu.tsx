@@ -26,6 +26,7 @@ function buildOrderPayload(
   note: string,
   address: string,
   paymentMethod: string,
+  customerName: string,
   whatsMessagePreview: string
 ) {
   return {
@@ -34,7 +35,7 @@ function buildOrderPayload(
     order: {
       external_id: `${Date.now()}-${Math.floor(Math.random()*1e6)}`,
       customer: {
-        name: deliveryType === 'delivery' ? 'Cliente Delivery' : 'Cliente Balcão',
+        name: deliveryType === 'delivery' ? customerName : 'Cliente Balcão',
         phone: '',
         notes: note || ''
       },
@@ -152,6 +153,7 @@ export function Menu() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [discountMessage, setDiscountMessage] = useState('');
+  const [customerName, setCustomerName] = useState('');
 
   const DELIVERY_FEE = 4.00;
 
@@ -444,6 +446,20 @@ const handleWhatsAppCheckout = async () => {
     return;
   }
 
+  if (deliveryType === 'delivery' && !customerName.trim()) {
+    toast.error('⚠️ INFORME O NOME DO CLIENTE', {
+      duration: 5000,
+      style: {
+        fontSize: '18px',
+        fontWeight: 'bold',
+        background: '#ef4444',
+        color: 'white',
+        border: '2px solid #b91c1c',
+      }
+    });
+    return;
+  }
+
   if (!paymentMethod || paymentMethod.trim() === '') {
     toast.error('⚠️ SELECIONE UMA FORMA DE PAGAMENTO', {
       duration: 5000,
@@ -516,6 +532,7 @@ const handleWhatsAppCheckout = async () => {
   message += `*Forma de entrega:* ${deliveryType === 'pickup' ? 'Retirar no local' : 'Entrega'}\n`;
   
   if (deliveryType === 'delivery') {
+    message += `*Cliente:* ${customerName}\n`;
     message += `*Endereço:* ${address}\n`;
   }
 
@@ -534,6 +551,7 @@ const handleWhatsAppCheckout = async () => {
       note,
       address,
       paymentMethod,
+      customerName,
       message
     );
 
@@ -858,17 +876,33 @@ return (
                     </div>
 
                     {deliveryType === 'delivery' && (
-                      <div className="space-y-2">
-                        <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                          Endereço de entrega
-                        </label>
-                        <textarea
-                          id="address"
-                          placeholder="Digite seu endereço completo..."
-                          value={address}
-                          onChange={(e) => setAddress(e.target.value)}
-                          className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-20 text-sm dark:bg-gray-700 dark:text-white"
-                        />
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Nome do cliente
+                          </label>
+                          <input
+                            id="customerName"
+                            type="text"
+                            placeholder="Nome completo"
+                            value={customerName}
+                            onChange={(e) => setCustomerName(e.target.value)}
+                            className="w-full p-2 border dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                            Endereço de entrega
+                          </label>
+                          <textarea
+                            id="address"
+                            placeholder="Digite seu endereço completo..."
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-20 text-sm dark:bg-gray-700 dark:text-white"
+                          />
+                        </div>
                       </div>
                     )}
 
