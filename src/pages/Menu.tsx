@@ -1014,6 +1014,13 @@ return (
                   </div>
                 </div>
 
+                {/* Aviso de Halloween no topo do carrinho */}
+                <div className="mb-4 p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 rounded-lg">
+                  <p className="text-sm text-purple-900 dark:text-purple-200">
+                    <span className="font-semibold">Aviso:</span> devido ao Halloween, nossos lanches sairão temáticos (pães coloridos). Caso não queira, avise ao finalizar o pedido no WhatsApp.
+                  </p>
+                </div>
+
                 <div className="border-t dark:border-gray-700 pt-4 mb-4">
                   <div className="space-y-4">
                     <div className="flex gap-2">
