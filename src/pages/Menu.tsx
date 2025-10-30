@@ -602,31 +602,54 @@ const handleWhatsAppCheckout = async () => {
 
   const encodedMessage = encodeURIComponent(message);
 
-  // >>> NOVO: envia ao Burguer.IA antes de abrir o WhatsApp (não bloqueia o fluxo se falhar)
+  // >>> CORREÇÃO iOS: Abrir WhatsApp imediatamente (antes do await) para funcionar no iOS Safari
+  // O iOS Safari só permite window.open() quando chamado diretamente em resposta ao clique do usuário
+  const whatsAppUrl = `https://wa.me/5561993709608?text=${encodedMessage}`;
+  
+  // Abrir WhatsApp imediatamente - IMPORTANTE: isso deve acontecer antes de qualquer await
+  // Isso garante que funcione no iOS Safari, que bloqueia popups se não forem chamados diretamente do evento do usuário
+  let whatsWindow: Window | null = null;
   try {
-    const payload = buildOrderPayload(
-      cart,
-      subtotal,
-      deliveryType,
-      DELIVERY_FEE,
-      total,
-      note,
-      address,
-      paymentMethod,
-      customerName,
-      message
-    );
-
-    const result = await sendOrderToIntake(payload);
-    if (result?.ok && result?.order_id) {
-      const suffix = `\n#Pedido ${result.order_id}`;
-      window.open(`https://wa.me/5561993709608?text=${encodedMessage}${encodeURIComponent(suffix)}`, '_blank');
-    } else {
-      window.open(`https://wa.me/5561993709608?text=${encodedMessage}`, '_blank');
+    whatsWindow = window.open(whatsAppUrl, '_blank');
+    // Verificar se o popup foi bloqueado
+    if (!whatsWindow || whatsWindow.closed || typeof whatsWindow.closed === 'undefined') {
+      // Se foi bloqueado, usar location.href como fallback (especialmente útil no iOS)
+      window.location.href = whatsAppUrl;
     }
   } catch (e) {
-    window.open(`https://wa.me/5561993709608?text=${encodedMessage}`, '_blank');
+    // Se window.open falhar, usar location.href como fallback
+    window.location.href = whatsAppUrl;
   }
+
+  // >>> Enviar ao Burguer.IA em background (não bloqueia o fluxo)
+  // Isso acontece após abrir o WhatsApp, então não afeta o iOS
+  (async () => {
+    try {
+      const payload = buildOrderPayload(
+        cart,
+        subtotal,
+        deliveryType,
+        DELIVERY_FEE,
+        total,
+        note,
+        address,
+        paymentMethod,
+        customerName,
+        message
+      );
+
+      const result = await sendOrderToIntake(payload);
+      // Se o pedido foi criado com sucesso, podemos tentar atualizar a mensagem
+      // Mas como já abrimos o WhatsApp, não podemos atualizar dinamicamente
+      // A mensagem já foi enviada, então apenas logamos o sucesso
+      if (result?.ok && result?.order_id) {
+        console.log('Pedido enviado com sucesso:', result.order_id);
+      }
+    } catch (e) {
+      console.error('Erro ao enviar pedido para API:', e);
+      // Não mostramos erro para o usuário, pois o WhatsApp já foi aberto
+    }
+  })();
 };
 
 const allBurgers = [...burgers, ...sweets];
