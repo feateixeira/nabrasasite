@@ -70,7 +70,7 @@ function buildOrderPayload(
       customer: {
         name: deliveryType === 'delivery' ? customerName : 'Cliente Balcão',
         phone: '',
-        notes: note || ''
+        instrucoes_cliente: note || ''
       },
       items: cart.map((item) => {
         let unit = item.price;
@@ -588,7 +588,7 @@ const handleWhatsAppCheckout = async () => {
   message += `*Total: R$ ${total.toFixed(2)}*\n\n`;
   
   if (note) {
-    message += `*Observações:* ${note}\n\n`;
+    message += `*Instruções do pedido:* ${note}\n\n`;
   }
   
   message += `*Forma de entrega:* ${deliveryType === 'pickup' ? 'Retirar no local' : 'Entrega'}\n`;
@@ -955,7 +955,7 @@ return (
 
                 <div className="border-t dark:border-gray-700 pt-4 mb-4">
                   <textarea
-                    placeholder="Observações gerais do pedido..."
+                    placeholder="Instruções gerais do pedido..."
                     value={note}
                     onChange={(e) => setNote(e.target.value)}
                     className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-20 mb-4 text-sm dark:bg-gray-700 dark:text-white"
