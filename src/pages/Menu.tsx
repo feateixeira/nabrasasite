@@ -684,7 +684,7 @@ const handleWhatsAppCheckout = async () => {
     const validation = validateDeliveryInfo(deliveryInfo);
     if (!validation.isValid) {
       if (!validation.hasName && !validation.hasAddress) {
-        toast.error('⚠️ INFORME SEU NOME E ENDEREÇO\n(Exemplo: Fellipe - 45 j 33)', {
+        toast.error('⚠️ INFORME SEU NOME E ENDEREÇO\n(Exemplo: João Silva - 201 M 110 rua das flores)', {
           duration: 6000,
           style: {
             fontSize: '16px',
@@ -1200,13 +1200,13 @@ return (
                         </label>
                         <textarea
                           id="deliveryInfo"
-                          placeholder="Ex: Fellipe - 45 j 33 ou Fellipe 45 j 33"
+                          placeholder="Ex: João Silva - 201 M 110 rua das flores ou João Silva 201 M 110 rua das flores"
                           value={deliveryInfo}
                           onChange={(e) => setDeliveryInfo(e.target.value)}
                           className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-24 text-sm dark:bg-gray-700 dark:text-white"
                         />
                         <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Digite seu nome e endereço. Exemplos: <span className="font-mono">Fellipe - 45 j 33</span> ou <span className="font-mono">Maria Silva 123 apt 45</span>
+                          Digite seu nome e endereço. Exemplos: <span className="font-mono">João Silva - 201 M 110 rua das flores</span> ou <span className="font-mono">Maria Silva 123 apt 45</span>
                         </p>
                       </div>
                     )}
