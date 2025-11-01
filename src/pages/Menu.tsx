@@ -44,6 +44,110 @@ function isStoreClosed(): boolean {
   return false;
 }
 
+// Função para validar se o campo de entrega contém nome e endereço
+// Aceita formatos como: "Fellipe - 45 j 33" ou "Fellipe 45 j 33"
+function validateDeliveryInfo(info: string): { isValid: boolean; hasName: boolean; hasAddress: boolean } {
+  const trimmed = info.trim();
+  
+  if (!trimmed) {
+    return { isValid: false, hasName: false, hasAddress: false };
+  }
+  
+  // Separar por vírgula, hífen ou múltiplos espaços
+  const separator = /[,\-]|\s{2,}/;
+  const hasSeparator = separator.test(trimmed);
+  
+  let namePart = '';
+  let addressPart = '';
+  
+  if (hasSeparator) {
+    // Se tem separador, dividir por ele
+    const parts = trimmed.split(separator).map(p => p.trim()).filter(p => p.length > 0);
+    if (parts.length >= 2) {
+      namePart = parts[0];
+      addressPart = parts.slice(1).join(' ');
+    }
+  } else {
+    // Se não tem separador explícito, tentar encontrar onde começa o número
+    const numberMatch = trimmed.match(/\d+/);
+    if (numberMatch && numberMatch.index !== undefined && numberMatch.index > 0) {
+      const splitIndex = numberMatch.index;
+      namePart = trimmed.substring(0, splitIndex).trim();
+      addressPart = trimmed.substring(splitIndex).trim();
+    }
+  }
+  
+  // Validar se tem nome (pelo menos uma palavra com mais de 2 letras)
+  const nameWords = namePart.split(/\s+/).filter(w => w.length >= 2);
+  const hasName = namePart.length >= 3 && nameWords.length >= 1;
+  
+  // Validar se tem endereço (deve ter pelo menos um número)
+  const hasAddress = addressPart.length >= 3 && /\d+/.test(addressPart);
+  
+  // Se não conseguiu separar, verificar se o texto todo tem nome e número
+  if (!namePart && !addressPart) {
+    const words = trimmed.split(/\s+/).filter(w => w.length >= 2);
+    const hasNumber = /\d+/.test(trimmed);
+    // Ter pelo menos uma palavra e um número
+    return {
+      isValid: words.length >= 1 && hasNumber && trimmed.length >= 8,
+      hasName: words.length >= 1,
+      hasAddress: hasNumber
+    };
+  }
+  
+  return {
+    isValid: hasName && hasAddress,
+    hasName,
+    hasAddress
+  };
+}
+
+// Função para extrair nome e endereço do campo único
+// Aceita formatos como: "Fellipe - 45 j 33" ou "Fellipe 45 j 33" ou "Fellipe, Rua X"
+function parseDeliveryInfo(info: string): { name: string; address: string } {
+  const trimmed = info.trim();
+  
+  // Tentar separar por vírgula, hífen ou múltiplos espaços
+  const separator = /[,\-]|\s{2,}/;
+  const hasSeparator = separator.test(trimmed);
+  
+  if (hasSeparator) {
+    const parts = trimmed.split(separator).map(p => p.trim()).filter(p => p.length > 0);
+    if (parts.length >= 2) {
+      return {
+        name: parts[0],
+        address: parts.slice(1).join(' ')
+      };
+    }
+  }
+  
+  // Se não tem separador explícito, tentar encontrar onde começa o número
+  const numberMatch = trimmed.match(/\d+/);
+  if (numberMatch && numberMatch.index !== undefined && numberMatch.index > 0) {
+    const splitIndex = numberMatch.index;
+    return {
+      name: trimmed.substring(0, splitIndex).trim(),
+      address: trimmed.substring(splitIndex).trim()
+    };
+  }
+  
+  // Fallback: se tem pelo menos 2 palavras, primeira é nome, resto é endereço
+  const words = trimmed.split(/\s+/);
+  if (words.length >= 2) {
+    return {
+      name: words[0],
+      address: words.slice(1).join(' ')
+    };
+  }
+  
+  // Último fallback: tudo como nome
+  return {
+    name: trimmed,
+    address: ''
+  };
+}
+
 function buildBurguerIAMessage(
   cart: CartItem[],
   subtotal: number,
@@ -51,9 +155,8 @@ function buildBurguerIAMessage(
   deliveryFee: number,
   total: number,
   note: string,
-  address: string,
+  deliveryInfo: string,
   paymentMethod: string,
-  customerName: string,
   calculateItemPrice: (item: CartItem) => number
 ): string {
   let message = `Pedido Na Brasa:\n\n`;
@@ -102,8 +205,9 @@ function buildBurguerIAMessage(
   
   message += `Forma de entrega: ${deliveryType === 'pickup' ? 'Retirar no local' : 'Entrega'}\n`;
   
-  if (deliveryType === 'delivery') {
-    message += `Cliente: ${customerName}\n`;
+  if (deliveryType === 'delivery' && deliveryInfo.trim()) {
+    const { name, address } = parseDeliveryInfo(deliveryInfo);
+    message += `Cliente: ${name}\n`;
     if (address.trim()) {
       message += `Endereço: ${address}\n`;
     }
@@ -126,9 +230,8 @@ function buildOrderPayload(
   deliveryFee: number,
   total: number,
   note: string,
-  address: string,
+  deliveryInfo: string,
   paymentMethod: string,
-  customerName: string,
   burguerIAMessage: string
 ) {
   return {
@@ -137,7 +240,9 @@ function buildOrderPayload(
     order: {
       external_id: `${Date.now()}-${Math.floor(Math.random()*1e6)}`,
       customer: {
-        name: deliveryType === 'delivery' ? customerName : 'Cliente Balcão',
+        name: deliveryType === 'delivery' && deliveryInfo.trim() 
+          ? parseDeliveryInfo(deliveryInfo).name 
+          : 'Cliente Balcão',
         phone: '',
         instrucoes_cliente: note || ''
       },
@@ -184,7 +289,9 @@ function buildOrderPayload(
       origin: 'site',
       meta: {
         deliveryType,
-        address: deliveryType === 'delivery' ? address : '',
+        address: deliveryType === 'delivery' && deliveryInfo.trim() 
+          ? parseDeliveryInfo(deliveryInfo).address 
+          : '',
         // Usar a mensagem formatada para o burguer.ia no campo whatsapp_message_preview
         // que é usado pelo backend para gerar a impressão
         whatsapp_message_preview: burguerIAMessage
@@ -273,7 +380,7 @@ export function Menu() {
   const [selectedSize, setSelectedSize] = useState<BurgerSize | null>(null);
   const [selectedPotatoOption, setSelectedPotatoOption] = useState<PotatoOption | null>(null);
   const [deliveryType, setDeliveryType] = useState<'pickup' | 'delivery'>('pickup');
-  const [address, setAddress] = useState('');
+  const [deliveryInfo, setDeliveryInfo] = useState(''); // Campo único: "Nome, Endereço completo"
   const [isTrio, setIsTrio] = useState(false);
   const [showDrinkSelector, setShowDrinkSelector] = useState(false);
   const [selectedTrioDrink, setSelectedTrioDrink] = useState('');
@@ -281,7 +388,6 @@ export function Menu() {
   const [couponCode, setCouponCode] = useState('');
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [discountMessage, setDiscountMessage] = useState('');
-  const [customerName, setCustomerName] = useState('');
   const [isStoreClosedState, setIsStoreClosedState] = useState(isStoreClosed());
 
   const DELIVERY_FEE = 4.00;
@@ -574,32 +680,45 @@ const handleWhatsAppCheckout = async () => {
     return;
   }
 
-  if (deliveryType === 'delivery' && !address.trim()) {
-    toast.error('⚠️ INFORME O ENDEREÇO DE ENTREGA', {
-      duration: 5000,
-      style: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        background: '#ef4444',
-        color: 'white',
-        border: '2px solid #b91c1c',
+  if (deliveryType === 'delivery') {
+    const validation = validateDeliveryInfo(deliveryInfo);
+    if (!validation.isValid) {
+      if (!validation.hasName && !validation.hasAddress) {
+        toast.error('⚠️ INFORME SEU NOME E ENDEREÇO\n(Exemplo: Fellipe - 45 j 33)', {
+          duration: 6000,
+          style: {
+            fontSize: '16px',
+            fontWeight: 'bold',
+            background: '#ef4444',
+            color: 'white',
+            border: '2px solid #b91c1c',
+          }
+        });
+      } else if (!validation.hasName) {
+        toast.error('⚠️ INFORME SEU NOME', {
+          duration: 5000,
+          style: {
+            fontSize: '18px',
+            fontWeight: 'bold',
+            background: '#ef4444',
+            color: 'white',
+            border: '2px solid #b91c1c',
+          }
+        });
+      } else if (!validation.hasAddress) {
+        toast.error('⚠️ INFORME O ENDEREÇO COM NÚMERO\n(Exemplo: 45 j 33 ou Rua X 123)', {
+          duration: 5000,
+          style: {
+            fontSize: '18px',
+            fontWeight: 'bold',
+            background: '#ef4444',
+            color: 'white',
+            border: '2px solid #b91c1c',
+          }
+        });
       }
-    });
-    return;
-  }
-
-  if (deliveryType === 'delivery' && !customerName.trim()) {
-    toast.error('⚠️ INFORME O NOME DO CLIENTE', {
-      duration: 5000,
-      style: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        background: '#ef4444',
-        color: 'white',
-        border: '2px solid #b91c1c',
-      }
-    });
-    return;
+      return;
+    }
   }
 
   if (!paymentMethod || paymentMethod.trim() === '') {
@@ -673,8 +792,9 @@ const handleWhatsAppCheckout = async () => {
   
   message += `*Forma de entrega:* ${deliveryType === 'pickup' ? 'Retirar no local' : 'Entrega'}\n`;
   
-  if (deliveryType === 'delivery') {
-    message += `*Cliente:* ${customerName}\n`;
+  if (deliveryType === 'delivery' && deliveryInfo.trim()) {
+    const { name, address } = parseDeliveryInfo(deliveryInfo);
+    message += `*Cliente:* ${name}\n`;
     message += `*Endereço:* ${address}\n`;
   }
 
@@ -713,9 +833,8 @@ const handleWhatsAppCheckout = async () => {
         DELIVERY_FEE,
         total,
         note,
-        address,
+        deliveryInfo,
         paymentMethod,
-        customerName,
         calculateItemPrice
       );
 
@@ -728,9 +847,8 @@ const handleWhatsAppCheckout = async () => {
         DELIVERY_FEE,
         total,
         note,
-        address,
+        deliveryInfo,
         paymentMethod,
-        customerName,
         burguerIAMessage
       );
 
@@ -1076,33 +1194,20 @@ return (
                     </div>
 
                     {deliveryType === 'delivery' && (
-                      <div className="space-y-4">
-                        <div className="space-y-2">
-                          <label htmlFor="customerName" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Nome do cliente
-                          </label>
-                          <input
-                            id="customerName"
-                            type="text"
-                            placeholder="Nome completo"
-                            value={customerName}
-                            onChange={(e) => setCustomerName(e.target.value)}
-                            className="w-full p-2 border dark:border-gray-600 rounded-lg text-sm dark:bg-gray-700 dark:text-white"
-                          />
-                        </div>
-
-                        <div className="space-y-2">
-                          <label htmlFor="address" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                            Endereço de entrega
-                          </label>
-                          <textarea
-                            id="address"
-                            placeholder="Digite seu endereço completo..."
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-20 text-sm dark:bg-gray-700 dark:text-white"
-                          />
-                        </div>
+                      <div className="space-y-2">
+                        <label htmlFor="deliveryInfo" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Nome e Endereço
+                        </label>
+                        <textarea
+                          id="deliveryInfo"
+                          placeholder="Ex: Fellipe - 45 j 33 ou Fellipe 45 j 33"
+                          value={deliveryInfo}
+                          onChange={(e) => setDeliveryInfo(e.target.value)}
+                          className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-24 text-sm dark:bg-gray-700 dark:text-white"
+                        />
+                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                          Digite seu nome e endereço. Exemplos: <span className="font-mono">Fellipe - 45 j 33</span> ou <span className="font-mono">Maria Silva 123 apt 45</span>
+                        </p>
                       </div>
                     )}
 
@@ -1129,7 +1234,7 @@ return (
                 {isStoreClosedState && (
                   <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-lg">
                     <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                      <span className="font-semibold">Aviso:</span> O estabelecimento Na Brasa abre de Quinta a Segunda das 19:00 às 23:00, Ao enviar seu lanche fora desse horário, nos entramos em contato para confirmar !
+                      <span className="font-semibold">Aviso:</span> O estabelecimento Na Brasa abre de Quinta a Segunda das 19:00 às 23:00, Ao enviar seu lanche fora desse horário, nos entramos em contato para confirmar!
                     </p>
                   </div>
                 )}
