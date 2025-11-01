@@ -1241,7 +1241,7 @@ return (
                 {isStoreClosedState && (
                   <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-lg">
                     <p className="text-sm text-yellow-800 dark:text-yellow-300">
-                      <span className="font-semibold">Aviso:</span> O estabelecimento Na Brasa abre de Quinta a Segunda das 19:00 às 23:00, Ao enviar seu lanche fora desse horário, nos entramos em contato para confirmar!
+                      <span className="font-semibold">Aviso:</span> O estabelecimento Na Brasa abre de Quinta a Segunda das 19:00 às 23:00. <br /> Ao enviar seu lanche fora desse horário, nós entraremos em contato para confirmar!
                     </p>
                   </div>
                 )}
