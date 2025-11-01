@@ -20,6 +20,8 @@ async function withTimeout<T>(p: Promise<T>, ms = 3000): Promise<T> {
 // Função para verificar se a hamburgueria está aberta
 // Aberto: Segunda (1), Quinta (4), Sexta (5), Sábado (6), Domingo (0) - das 18:00 às 23:30
 // Fechado: Terça (2), Quarta (3)
+// COMENTADO: Verificação de horário desabilitada - pedidos podem ser enviados a qualquer momento
+/*
 function isStoreOpen(): { isOpen: boolean; message: string } {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
@@ -49,6 +51,86 @@ function isStoreOpen(): { isOpen: boolean; message: string } {
     message: 'Atendimento: Segunda, Quinta, Sexta, Sábado e Domingo das 18:00 às 23:30'
   };
 }
+*/
+// Função temporária sempre retorna aberto
+function isStoreOpen(): { isOpen: boolean; message: string } {
+  return { isOpen: true, message: '' };
+}
+
+function buildBurguerIAMessage(
+  cart: CartItem[],
+  subtotal: number,
+  deliveryType: 'pickup' | 'delivery',
+  deliveryFee: number,
+  total: number,
+  note: string,
+  address: string,
+  paymentMethod: string,
+  customerName: string,
+  calculateItemPrice: (item: CartItem) => number
+): string {
+  let message = `Pedido Na Brasa:\n\n`;
+
+  cart.forEach((item) => {
+    const itemPrice = calculateItemPrice(item) / item.quantity; // Preço unitário
+
+    // Iniciar delimitador do item
+    message += `[${item.quantity}x ${item.name}`;
+    
+    if (item.selectedSize) {
+      message += ` - ${item.selectedSize.name}`;
+    }
+    
+    if (item.selectedVariant && item.type !== 'drink') {
+      message += ` - ${item.selectedVariant.name}`;
+    }
+    
+    message += ` - R$ ${itemPrice.toFixed(2)}\n`;
+    
+    // Adicionar observação do item apenas se existir
+    if (item.notes && item.notes.trim() !== '') {
+      message += `\nObs: ${item.notes.trim()}\n\n`;
+    } else {
+      message += `\n`;
+    }
+    
+    // Adicionar molhos se existirem (apenas para hambúrgueres salgados)
+    if (item.type === 'burger' && !item.isSweetBurger) {
+      if (item.selectedSauces && item.selectedSauces.length > 0) {
+        message += `Molhos: ${item.selectedSauces.join(', ')}`;
+      }
+    }
+    
+    // Fechar delimitador do item
+    message += `]\n\n`;
+  });
+
+  message += `Subtotal: R$ ${subtotal.toFixed(2)}\n`;
+  
+  if (deliveryType === 'delivery') {
+    message += `Taxa de entrega: R$ ${deliveryFee.toFixed(2)}\n`;
+  }
+  
+  message += `Total: R$ ${total.toFixed(2)}\n\n`;
+  
+  message += `Forma de entrega: ${deliveryType === 'pickup' ? 'Retirar no local' : 'Entrega'}\n`;
+  
+  if (deliveryType === 'delivery') {
+    message += `Cliente: ${customerName}\n`;
+    if (address.trim()) {
+      message += `Endereço: ${address}\n`;
+    }
+  }
+
+  message += `Forma de pagamento: ${paymentMethod}\n`;
+
+  // Adicionar instruções gerais apenas se existirem
+  if (note && note.trim() !== '') {
+    message += `\nInstruções gerais do pedido: ${note}\n`;
+  }
+
+  return message;
+}
 
 function buildOrderPayload(
   cart: CartItem[],
@@ -60,7 +142,7 @@ function buildOrderPayload(
   address: string,
   paymentMethod: string,
   customerName: string,
-  whatsMessagePreview: string
+  burguerIAMessage: string
 ) {
   return {
     estabelecimento_slug: ESTAB_SLUG,
@@ -116,36 +198,62 @@ function buildOrderPayload(
       meta: {
         deliveryType,
         address: deliveryType === 'delivery' ? address : '',
-        whatsapp_message_preview: whatsMessagePreview
+        // Usar a mensagem formatada para o burguer.ia no campo whatsapp_message_preview
+        // que é usado pelo backend para gerar a impressão
+        whatsapp_message_preview: burguerIAMessage
       }
     }
   };
 }
 
 async function sendOrderToIntake(payload: any) {
-  if (!INTAKE_URL || !INTAKE_API_KEY || !ESTAB_SLUG) return { ok: false, reason: 'missing-env' };
-  const idempotencyKey = crypto.randomUUID();
-
-  const res = await withTimeout(
-    fetch(INTAKE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        // Edge Functions costumam aceitar Authorization. Deixo os dois headers para compatibilidade:
-        'Authorization': `Bearer ${INTAKE_API_KEY}`,
-        'X-Estab-Key': INTAKE_API_KEY,
-        'Idempotency-Key': idempotencyKey
-      },
-      body: JSON.stringify(payload)
-    }),
-    3000
-  );
-
-  if (!res.ok) {
-    const t = await res.text().catch(() => '');
-    throw new Error(`intake-failed: ${res.status} ${t}`);
+  if (!INTAKE_URL || !INTAKE_API_KEY || !ESTAB_SLUG) {
+    console.error('❌ Variáveis de ambiente faltando:', { INTAKE_URL: !!INTAKE_URL, INTAKE_API_KEY: !!INTAKE_API_KEY, ESTAB_SLUG: !!ESTAB_SLUG });
+    return { ok: false, reason: 'missing-env' };
   }
-  return res.json(); // { ok, order_id, print_queued }
+  
+  const idempotencyKey = crypto.randomUUID();
+  console.log('📤 Enviando pedido para:', INTAKE_URL);
+
+  try {
+    const res = await withTimeout(
+      fetch(INTAKE_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // Edge Functions costumam aceitar Authorization. Deixo os dois headers para compatibilidade:
+          'Authorization': `Bearer ${INTAKE_API_KEY}`,
+          'X-Estab-Key': INTAKE_API_KEY,
+          'Idempotency-Key': idempotencyKey
+        },
+        body: JSON.stringify(payload)
+      }),
+      3000
+    );
+
+    console.log('📥 Status da resposta:', res.status, res.statusText);
+
+    if (!res.ok) {
+      const errorText = await res.text().catch(() => 'Não foi possível ler o erro');
+      console.error('❌ Erro HTTP:', res.status, errorText);
+      throw new Error(`intake-failed: ${res.status} ${errorText}`);
+    }
+    
+    const result = await res.json();
+    console.log('✅ Resposta do servidor:', result);
+    return result; // { ok, order_id, print_queued }
+  } catch (error: any) {
+    if (error.message === 'timeout') {
+      console.error('❌ Timeout ao enviar pedido (3s)');
+      throw new Error('Timeout ao enviar pedido');
+    }
+    // Em desenvolvimento (localhost), o CORS bloqueia - isso é esperado
+    // Em produção, o pedido será enviado normalmente
+    if (error.message?.includes('CORS') || error.message?.includes('Failed to fetch')) {
+      console.warn('⚠️ CORS bloqueado em desenvolvimento. Em produção funcionará normalmente.');
+    }
+    throw error;
+  }
 }
 
 
@@ -208,6 +316,8 @@ export function Menu() {
   }, []);
 
   // Atualizar status da loja a cada minuto
+  // COMENTADO: Verificação de horário desabilitada
+  /*
   useEffect(() => {
     const updateStoreStatus = () => {
       setStoreStatus(isStoreOpen());
@@ -218,6 +328,7 @@ export function Menu() {
     
     return () => clearInterval(interval);
   }, []);
+  */
 
   if (loading) {
     return (
@@ -465,6 +576,8 @@ export function Menu() {
 
 const handleWhatsAppCheckout = async () => {
   // Verificar se a hamburgueria está aberta
+  // COMENTADO: Verificação de horário desabilitada - pedidos podem ser enviados a qualquer momento
+  /*
   const storeStatus = isStoreOpen();
   if (!storeStatus.isOpen) {
     toast.error(storeStatus.message || 'A hamburgueria está fechada no momento', {
@@ -479,6 +592,7 @@ const handleWhatsAppCheckout = async () => {
     });
     return;
   }
+  */
 
   if (cart.length === 0) {
     toast.error('Adicione itens ao carrinho', {
@@ -625,6 +739,22 @@ const handleWhatsAppCheckout = async () => {
   // Isso acontece após abrir o WhatsApp, então não afeta o iOS
   (async () => {
     try {
+      // Gerar mensagem formatada especialmente para o burguer.ia
+      const burguerIAMessage = buildBurguerIAMessage(
+        cart,
+        subtotal,
+        deliveryType,
+        DELIVERY_FEE,
+        total,
+        note,
+        address,
+        paymentMethod,
+        customerName,
+        calculateItemPrice
+      );
+
+      console.log('Mensagem formatada para Burguer.IA:', burguerIAMessage);
+
       const payload = buildOrderPayload(
         cart,
         subtotal,
@@ -635,19 +765,38 @@ const handleWhatsAppCheckout = async () => {
         address,
         paymentMethod,
         customerName,
-        message
+        burguerIAMessage
       );
 
+      console.log('Payload a ser enviado:', JSON.stringify(payload, null, 2));
+
       const result = await sendOrderToIntake(payload);
+      console.log('Resposta do Burguer.IA:', result);
+      
       // Se o pedido foi criado com sucesso, podemos tentar atualizar a mensagem
       // Mas como já abrimos o WhatsApp, não podemos atualizar dinamicamente
       // A mensagem já foi enviada, então apenas logamos o sucesso
       if (result?.ok && result?.order_id) {
-        console.log('Pedido enviado com sucesso:', result.order_id);
+        console.log('✅ Pedido enviado com sucesso:', result.order_id);
+        toast.success('Pedido registrado no sistema!', { duration: 3000 });
+      } else {
+        console.error('❌ Pedido não foi criado:', result);
+        toast.error('Erro ao registrar pedido no sistema', { duration: 3000 });
       }
-    } catch (e) {
-      console.error('Erro ao enviar pedido para API:', e);
-      // Não mostramos erro para o usuário, pois o WhatsApp já foi aberto
+    } catch (e: any) {
+      console.error('❌ Erro ao enviar pedido para API:', e);
+      
+      // Em desenvolvimento, CORS bloqueia - isso é normal e esperado
+      // Em produção no domínio correto, funcionará normalmente
+      const isCorsError = e?.message?.includes('CORS') || e?.message?.includes('Failed to fetch');
+      
+      if (isCorsError && window.location.hostname === 'localhost') {
+        console.log('ℹ️ Em desenvolvimento: CORS bloqueado. Em produção funcionará.');
+        // Não mostrar erro para o usuário em desenvolvimento
+      } else {
+        toast.error('Erro ao enviar pedido ao sistema', { duration: 3000 });
+      }
+      // Não bloqueamos o usuário, pois o WhatsApp já foi aberto
     }
   })();
 };
@@ -655,13 +804,18 @@ const handleWhatsAppCheckout = async () => {
 const allBurgers = [...burgers, ...sweets];
 
 // Verificar se é terça ou quarta para mostrar aviso preventivo
+// COMENTADO: Verificação de horário desabilitada
+/*
 const now = new Date();
 const dayOfWeek = now.getDay();
 const isClosedDay = dayOfWeek === 2 || dayOfWeek === 3; // Terça ou Quarta
+*/
+const isClosedDay = false; // Sempre false - aviso desabilitado
 
 return (
   <main className="py-8">
-    {isClosedDay && (
+    {/* COMENTADO: Aviso de loja fechada desabilitado */}
+    {false && isClosedDay && (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
         <div className="bg-red-600 dark:bg-red-800 text-white p-4 rounded-lg shadow-lg border-2 border-red-700 dark:border-red-900">
           <div className="flex items-center justify-center gap-3">
@@ -1092,7 +1246,8 @@ return (
                   </div>
                 </div>
 
-                {!storeStatus.isOpen && (
+                {/* COMENTADO: Aviso de loja fechada no carrinho desabilitado */}
+                {false && !storeStatus.isOpen && (
                   <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-lg">
                     <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300 text-center">
                       {storeStatus.message}
@@ -1101,15 +1256,19 @@ return (
                 )}
                 <button
                   onClick={handleWhatsAppCheckout}
-                  disabled={!storeStatus.isOpen}
+                  // COMENTADO: disabled desabilitado - botão sempre ativo
+                  // disabled={!storeStatus.isOpen}
                   className={`w-full py-3 px-4 rounded-lg font-semibold flex items-center justify-center transition-colors ${
-                    storeStatus.isOpen
+                    // Sempre ativo agora
+                    // storeStatus.isOpen
+                      true
                       ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
                       : 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
                   }`}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {storeStatus.isOpen ? 'Enviar pedido no WhatsApp' : 'Loja Fechada'}
+                  {'Enviar pedido no WhatsApp'}
+                  {/* {storeStatus.isOpen ? 'Enviar pedido no WhatsApp' : 'Loja Fechada'} */}
                 </button>
               </>
             )}
