@@ -234,6 +234,13 @@ function buildOrderPayload(
   paymentMethod: string,
   burguerIAMessage: string
 ) {
+  // Calcular resumo por categoria usando os tipos originais
+  const categorySummary: { [key: string]: number } = {};
+  cart.forEach((item) => {
+    const category = item.type; // 'burger', 'side' ou 'drink'
+    categorySummary[category] = (categorySummary[category] || 0) + item.quantity;
+  });
+
   return {
     estabelecimento_slug: ESTAB_SLUG,
     source_domain: 'hamburguerianabrasa.com.br',
@@ -265,6 +272,7 @@ function buildOrderPayload(
           name: item.name,
           qty: item.quantity,
           unit_price: Number(unit.toFixed(2)),
+          category: item.type, // 'burger', 'side' ou 'drink'
           obs: item.notes || '',
           complements: [
             ...(item.selectedSauces?.length ? [{ name: `Molhos: ${item.selectedSauces.join(', ')}`, price: 0 }] : []),
@@ -292,6 +300,8 @@ function buildOrderPayload(
         address: deliveryType === 'delivery' && deliveryInfo.trim() 
           ? parseDeliveryInfo(deliveryInfo).address 
           : '',
+        // Resumo por categoria para o dashboard
+        categorySummary: categorySummary,
         // Usar a mensagem formatada para o burguer.ia no campo whatsapp_message_preview
         // que é usado pelo backend para gerar a impressão
         whatsapp_message_preview: burguerIAMessage
@@ -1205,9 +1215,6 @@ return (
                           onChange={(e) => setDeliveryInfo(e.target.value)}
                           className="w-full p-2 border dark:border-gray-600 rounded-lg resize-none h-24 text-sm dark:bg-gray-700 dark:text-white"
                         />
-                        <p className="text-xs text-gray-500 dark:text-gray-400">
-                          Digite seu nome e endereço. Exemplos: <span className="font-mono">João Silva - 201 M 110 rua das flores</span> ou <span className="font-mono">Maria Silva 123 apt 45</span>
-                        </p>
                       </div>
                     )}
 
