@@ -17,44 +17,31 @@ async function withTimeout<T>(p: Promise<T>, ms = 3000): Promise<T> {
   ]) as Promise<T>;
 }
 
-// Função para verificar se a hamburgueria está aberta
-// Aberto: Segunda (1), Quinta (4), Sexta (5), Sábado (6), Domingo (0) - das 18:00 às 23:30
-// Fechado: Terça (2), Quarta (3)
-// COMENTADO: Verificação de horário desabilitada - pedidos podem ser enviados a qualquer momento
-/*
-function isStoreOpen(): { isOpen: boolean; message: string } {
+// Função para verificar se a hamburgueria está fechada (apenas para exibir aviso)
+// Horários: Quinta a Segunda das 18:30 às 23:30 | Terça e Quarta fechado
+function isStoreClosed(): boolean {
   const now = new Date();
   const dayOfWeek = now.getDay(); // 0 = Domingo, 1 = Segunda, 2 = Terça, 3 = Quarta, 4 = Quinta, 5 = Sexta, 6 = Sábado
   const hours = now.getHours();
   const minutes = now.getMinutes();
   const currentTime = hours * 60 + minutes; // Converter para minutos desde meia-noite
   
-  const openTime = 18 * 60; // 18:00 em minutos
+  const openTime = 18 * 60 + 30; // 18:30 em minutos
   const closeTime = 23 * 60 + 30; // 23:30 em minutos
   
-  // Bloqueado completamente: Terça (2) e Quarta (3)
+  // Fechado completamente: Terça (2) e Quarta (3)
   if (dayOfWeek === 2 || dayOfWeek === 3) {
-    return {
-      isOpen: false,
-      message: 'A hamburgueria está fechada às terças e quartas-feiras.'
-    };
+    return true;
   }
   
-  // Verificar horário para os dias abertos (Segunda, Quinta, Sexta, Sábado, Domingo)
-  if (currentTime >= openTime && currentTime <= closeTime) {
-    return { isOpen: true, message: '' };
+  // Verificar horário para os dias abertos (Quinta=4, Sexta=5, Sábado=6, Domingo=0, Segunda=1)
+  // Se estiver fora do horário, está fechado
+  if (currentTime < openTime || currentTime > closeTime) {
+    return true;
   }
   
-  // Fora do horário
-  return {
-    isOpen: false,
-    message: 'Atendimento: Segunda, Quinta, Sexta, Sábado e Domingo das 18:00 às 23:30'
-  };
-}
-*/
-// Função temporária sempre retorna aberto
-function isStoreOpen(): { isOpen: boolean; message: string } {
-  return { isOpen: true, message: '' };
+  // Dentro do horário e dia aberto
+  return false;
 }
 
 function buildBurguerIAMessage(
@@ -295,7 +282,7 @@ export function Menu() {
   const [appliedDiscount, setAppliedDiscount] = useState(0);
   const [discountMessage, setDiscountMessage] = useState('');
   const [customerName, setCustomerName] = useState('');
-  const [storeStatus, setStoreStatus] = useState(isStoreOpen());
+  const [isStoreClosedState, setIsStoreClosedState] = useState(isStoreClosed());
 
   const DELIVERY_FEE = 4.00;
 
@@ -315,12 +302,10 @@ export function Menu() {
     loadProducts();
   }, []);
 
-  // Atualizar status da loja a cada minuto
-  // COMENTADO: Verificação de horário desabilitada
-  /*
+  // Atualizar status da loja a cada minuto (para exibir aviso quando fechado)
   useEffect(() => {
     const updateStoreStatus = () => {
-      setStoreStatus(isStoreOpen());
+      setIsStoreClosedState(isStoreClosed());
     };
     
     updateStoreStatus();
@@ -328,7 +313,6 @@ export function Menu() {
     
     return () => clearInterval(interval);
   }, []);
-  */
 
   if (loading) {
     return (
@@ -575,24 +559,6 @@ export function Menu() {
   // ⇩⇩⇩ SUBSTITUA A PARTIR DAQUI ⇩⇩⇩
 
 const handleWhatsAppCheckout = async () => {
-  // Verificar se a hamburgueria está aberta
-  // COMENTADO: Verificação de horário desabilitada - pedidos podem ser enviados a qualquer momento
-  /*
-  const storeStatus = isStoreOpen();
-  if (!storeStatus.isOpen) {
-    toast.error(storeStatus.message || 'A hamburgueria está fechada no momento', {
-      duration: 6000,
-      style: {
-        fontSize: '18px',
-        fontWeight: 'bold',
-        background: '#ef4444',
-        color: 'white',
-        border: '2px solid #b91c1c',
-      }
-    });
-    return;
-  }
-  */
 
   if (cart.length === 0) {
     toast.error('Adicione itens ao carrinho', {
@@ -803,40 +769,8 @@ const handleWhatsAppCheckout = async () => {
 
 const allBurgers = [...burgers, ...sweets];
 
-// Verificar se é terça ou quarta para mostrar aviso preventivo
-// COMENTADO: Verificação de horário desabilitada
-/*
-const now = new Date();
-const dayOfWeek = now.getDay();
-const isClosedDay = dayOfWeek === 2 || dayOfWeek === 3; // Terça ou Quarta
-*/
-const isClosedDay = false; // Sempre false - aviso desabilitado
-
 return (
   <main className="py-8">
-    {/* COMENTADO: Aviso de loja fechada desabilitado */}
-    {false && isClosedDay && (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-        <div className="bg-red-600 dark:bg-red-800 text-white p-4 rounded-lg shadow-lg border-2 border-red-700 dark:border-red-900">
-          <div className="flex items-center justify-center gap-3">
-            <div className="flex-shrink-0">
-              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-              </svg>
-            </div>
-            <div className="text-center">
-              <p className="text-lg font-bold">🚫 Estamos Fechados Hoje</p>
-              <p className="text-sm mt-1 opacity-90">
-                A hamburgueria está fechada às terças e quartas-feiras.
-              </p>
-              <p className="text-sm mt-1 opacity-90">
-                Atendimento: Segunda, Quinta, Sexta, Sábado e Domingo das 18:00 às 23:30
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    )}
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-12">
@@ -1191,12 +1125,14 @@ return (
                   </div>
                 </div>
 
-                {/* Aviso de Halloween no topo do carrinho */}
-                <div className="mb-4 p-3 bg-purple-100 dark:bg-purple-900/30 border border-purple-300 dark:border-purple-700 rounded-lg">
-                  <p className="text-sm text-purple-900 dark:text-purple-200">
-                    <span className="font-semibold">Aviso:</span> devido ao Halloween, nossos lanches sairão temáticos (pães coloridos). Caso não queira, avise ao finalizar o pedido no WhatsApp.
-                  </p>
-                </div>
+                {/* Aviso quando a loja está fechada */}
+                {isStoreClosedState && (
+                  <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-lg">
+                    <p className="text-sm text-yellow-800 dark:text-yellow-300">
+                      <span className="font-semibold">Aviso:</span> O estabelecimento Na Brasa abre de Quinta a Segunda das 19:00 às 23:00, Ao enviar seu lanche fora desse horário, nos entramos em contato para confirmar !
+                    </p>
+                  </div>
+                )}
 
                 <div className="border-t dark:border-gray-700 pt-4 mb-4">
                   <div className="space-y-4">
@@ -1246,29 +1182,12 @@ return (
                   </div>
                 </div>
 
-                {/* COMENTADO: Aviso de loja fechada no carrinho desabilitado */}
-                {false && !storeStatus.isOpen && (
-                  <div className="mb-4 p-3 bg-yellow-100 dark:bg-yellow-900/30 border border-yellow-400 dark:border-yellow-700 rounded-lg">
-                    <p className="text-sm font-medium text-yellow-800 dark:text-yellow-300 text-center">
-                      {storeStatus.message}
-                    </p>
-                  </div>
-                )}
                 <button
                   onClick={handleWhatsAppCheckout}
-                  // COMENTADO: disabled desabilitado - botão sempre ativo
-                  // disabled={!storeStatus.isOpen}
-                  className={`w-full py-3 px-4 rounded-lg font-semibold flex items-center justify-center transition-colors ${
-                    // Sempre ativo agora
-                    // storeStatus.isOpen
-                      true
-                      ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
-                      : 'bg-gray-400 dark:bg-gray-600 text-gray-200 dark:text-gray-400 cursor-not-allowed'
-                  }`}
+                  className="w-full py-3 px-4 rounded-lg font-semibold flex items-center justify-center transition-colors bg-red-600 text-white hover:bg-red-700 cursor-pointer"
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {'Enviar pedido no WhatsApp'}
-                  {/* {storeStatus.isOpen ? 'Enviar pedido no WhatsApp' : 'Loja Fechada'} */}
+                  Enviar pedido no WhatsApp
                 </button>
               </>
             )}
