@@ -9,6 +9,10 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { UnitProvider } from "@/hooks/useUnit";
+import { CartProvider } from "@/hooks/useCart";
+import { Cart } from "@/components/Cart";
+import { CartItemFlyAnimation } from "@/components/CartItemFlyAnimation";
 
 function NotFoundComponent() {
   return (
@@ -72,11 +76,11 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "Na Brasa 🔥 — Hamburgueria Artesanal" },
+      { name: "description", content: "Hamburgueria artesanal no carvão. Peça online em Brazlândia ou Vicente Pires." },
+      { name: "author", content: "Hamburgueria Na Brasa" },
+      { property: "og:title", content: "Na Brasa 🔥 — Peça online" },
+      { property: "og:description", content: "Hambúrgueres artesanais no carvão. Brazlândia · Vicente Pires." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
@@ -113,7 +117,13 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      <Outlet />
+      <UnitProvider>
+        <CartProvider>
+          <Outlet />
+          <Cart />
+          <CartItemFlyAnimation />
+        </CartProvider>
+      </UnitProvider>
     </QueryClientProvider>
   );
 }
