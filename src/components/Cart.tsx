@@ -332,7 +332,7 @@ export function Cart() {
                     )}
                   </div>
 
-                  <div className="charcoal-card rounded-xl p-3 border border-border space_y-1.5">
+                  <div className="charcoal-card rounded-xl p-3 border border-border space-y-1.5">
                     <Row label="Subtotal" value={formatBRL(subtotal)} />
                     {orderType === 'delivery' && (
                       <Row label="Taxa de entrega" value="a combinar" muted />
