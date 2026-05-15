@@ -184,4 +184,65 @@
   .charcoal-card {
     background: linear-gradient(180deg, oklch(0.23 0.014 55) 0%, oklch(0.19 0.013 55) 100%);
   }
+  .premium-card {
+    position: relative;
+    background:
+      linear-gradient(180deg, oklch(0.24 0.03 65) 0%, oklch(0.18 0.025 55) 100%);
+    border: 1px solid transparent;
+    background-clip: padding-box;
+    box-shadow:
+      0 0 0 1px oklch(0.78 0.18 65 / 0.35),
+      0 10px 40px -10px oklch(0.78 0.18 65 / 0.45),
+      inset 0 1px 0 oklch(0.85 0.20 75 / 0.15);
+  }
+  .premium-card::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(135deg,
+      oklch(0.85 0.20 75 / 0.9) 0%,
+      oklch(0.78 0.18 65 / 0.4) 40%,
+      transparent 60%,
+      oklch(0.78 0.18 65 / 0.4) 80%,
+      oklch(0.85 0.20 75 / 0.9) 100%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+            mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0.9;
+  }
+  .premium-card::after {
+    content: "";
+    position: absolute;
+    inset: -8px;
+    border-radius: inherit;
+    background: radial-gradient(ellipse at center,
+      oklch(0.85 0.20 75 / 0.25) 0%,
+      transparent 70%);
+    filter: blur(12px);
+    z-index: -1;
+    pointer-events: none;
+    animation: premium-aura 3.5s ease-in-out infinite;
+  }
+  @keyframes premium-aura {
+    0%, 100% { opacity: 0.55; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.04); }
+  }
+  .premium-badge {
+    background: linear-gradient(135deg,
+      oklch(0.92 0.16 90) 0%,
+      oklch(0.78 0.18 65) 50%,
+      oklch(0.92 0.16 90) 100%);
+    background-size: 200% 100%;
+    animation: premium-shine 3s linear infinite;
+    color: oklch(0.16 0.012 60);
+    text-shadow: 0 1px 0 oklch(0.95 0.05 80 / 0.4);
+  }
+  @keyframes premium-shine {
+    0% { background-position: 0% 0; }
+    100% { background-position: 200% 0; }
+  }
 }
