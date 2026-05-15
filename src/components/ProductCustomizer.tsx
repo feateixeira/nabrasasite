@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { X, Minus, Plus } from 'lucide-react';
+import { X, Minus, Plus, ChevronDown } from 'lucide-react';
 import type { BurgerAddOn, CartItem, Product } from '@/data/types';
 import { burgerAddOns, burgerSizes } from '@/data/data';
 import { formatBRL, uid } from '@/utils/formatters';
@@ -20,6 +20,7 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
   const [addOns, setAddOns] = useState<BurgerAddOn[]>([]);
   const [notes, setNotes] = useState('');
   const [qty, setQty] = useState(1);
+  const [addOnsOpen, setAddOnsOpen] = useState(false);
 
   const sizeList = product?.burgerSizeGroup ? burgerSizes[product.burgerSizeGroup] ?? [] : [];
 
@@ -146,27 +147,55 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
               )}
 
               {product.type === 'burger' && (
-                <Section title="Adicionais">
-                  <div className="grid grid-cols-1 gap-1.5">
-                    {burgerAddOns.map((a) => {
-                      const on = !!addOns.find((x) => x.id === a.id);
-                      return (
-                        <button
-                          key={a.id}
-                          onClick={() => toggleAddOn(a)}
-                          className={`flex items-center justify-between px-3 py-2 rounded-lg border text-sm transition-colors ${
-                            on
-                              ? 'border-primary bg-primary/10 text-foreground'
-                              : 'border-border bg-secondary/40 text-muted-foreground'
-                          }`}
-                        >
-                          <span>{a.name}</span>
-                          <span className="font-medium text-primary">+{formatBRL(a.price)}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </Section>
+                <div>
+                  <button
+                    onClick={() => setAddOnsOpen((v) => !v)}
+                    className="w-full flex items-center justify-between px-3 py-2.5 rounded-lg border border-border bg-secondary/40"
+                  >
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-display text-sm tracking-widest text-primary">ADICIONAIS</h4>
+                      {addOns.length > 0 && (
+                        <span className="text-[10px] font-bold px-1.5 py-0.5 rounded-md ember-gradient text-primary-foreground">
+                          {addOns.length}
+                        </span>
+                      )}
+                    </div>
+                    <ChevronDown
+                      className={`w-4 h-4 text-muted-foreground transition-transform ${addOnsOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {addOnsOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <div className="grid grid-cols-1 gap-1.5 pt-2">
+                          {burgerAddOns.map((a) => {
+                            const on = !!addOns.find((x) => x.id === a.id);
+                            return (
+                              <button
+                                key={a.id}
+                                onClick={() => toggleAddOn(a)}
+                                className={`flex items-center justify-between px-3 py-2 rounded-lg border text-sm transition-colors ${
+                                  on
+                                    ? 'border-primary bg-primary/10 text-foreground'
+                                    : 'border-border bg-secondary/40 text-muted-foreground'
+                                }`}
+                              >
+                                <span>{a.name}</span>
+                                <span className="font-medium text-primary">+{formatBRL(a.price)}</span>
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
               )}
 
               {product.type === 'side' && product.potatoOptions && (

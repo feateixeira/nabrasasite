@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Flame, MapPin, Phone, ShoppingBag, RefreshCw } from 'lucide-react';
+import { MapPin, Phone, ShoppingBag, RefreshCw } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
 import { useUnit } from '@/hooks/useUnit';
 import { useCart } from '@/hooks/useCart';
@@ -21,9 +21,24 @@ export function Header() {
     <>
       <header className="sticky top-0 z-40 bg-coal/90 backdrop-blur-md border-b border-border">
         <div className="max-w-2xl mx-auto px-4 py-3 flex items-center gap-2">
-          <Link to="/" className="flex items-center gap-1.5">
-            <Flame className="w-5 h-5 text-primary" />
-            <span className="font-display text-2xl ember-text">NA BRASA</span>
+          <Link to="/" className="flex items-center" aria-label="Na Brasa - Início">
+            <img
+              src="/logo.png"
+              alt="Hamburgueria Na Brasa"
+              className="h-10 w-auto object-contain"
+              onError={(e) => {
+                const img = e.currentTarget as HTMLImageElement;
+                img.style.display = 'none';
+                const fb = img.nextElementSibling as HTMLElement | null;
+                if (fb) fb.style.display = 'inline';
+              }}
+            />
+            <span
+              className="font-display text-2xl ember-text"
+              style={{ display: 'none' }}
+            >
+              NA BRASA
+            </span>
           </Link>
 
           {unit && (

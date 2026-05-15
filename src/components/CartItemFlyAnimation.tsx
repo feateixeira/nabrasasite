@@ -1,9 +1,8 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
 import { useCart } from '@/hooks/useCart';
 
 export function CartItemFlyAnimation() {
-  const { flyEvents, consumeFly, cartIconRef } = useCart();
+  const { flyEvents, consumeFly } = useCart();
   return (
     <>
       {flyEvents.map((e) => (
@@ -11,10 +10,7 @@ export function CartItemFlyAnimation() {
           key={e.id}
           image={e.image}
           from={e.from}
-          target={() => {
-            const r = cartIconRef.current?.getBoundingClientRect();
-            return r ? { x: r.left + r.width / 2, y: r.top + r.height / 2 } : null;
-          }}
+          to={e.to}
           onDone={() => consumeFly(e.id)}
         />
       ))}
@@ -25,19 +21,14 @@ export function CartItemFlyAnimation() {
 function Fly({
   image,
   from,
-  target,
+  to,
   onDone,
 }: {
   image: string;
   from: { x: number; y: number };
-  target: () => { x: number; y: number } | null;
+  to: { x: number; y: number };
   onDone: () => void;
 }) {
-  const [to, setTo] = useState<{ x: number; y: number } | null>(null);
-  useEffect(() => {
-    setTo(target());
-  }, [target]);
-  if (!to) return null;
   return (
     <motion.div
       initial={{ x: from.x - 28, y: from.y - 28, scale: 1, opacity: 1 }}
