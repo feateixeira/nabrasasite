@@ -5,6 +5,7 @@ interface FlyEvent {
   id: string;
   image: string;
   from: { x: number; y: number };
+  to: { x: number; y: number };
 }
 
 interface CartCtx {
@@ -37,11 +38,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const add = useCallback((item: CartItem, from?: { x: number; y: number }, image?: string) => {
     setItems((prev) => [...prev, item]);
     if (from) {
-      const id = Math.random().toString(36).slice(2);
-      setFly((p) => [...p, { id, image: image ?? item.image, from }]);
+      const r = iconRef.current?.getBoundingClientRect();
+      if (r) {
+        const to = { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+        const id = Math.random().toString(36).slice(2);
+        setFly((p) => [...p, { id, image: image ?? item.image, from, to }]);
+      }
     }
     setBumpKey((k) => k + 1);
-  }, []);
+  }, [iconRef]);
 
   const remove = useCallback((uid: string) => {
     setItems((prev) => prev.filter((i) => i.uid !== uid));
