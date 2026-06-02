@@ -5,6 +5,7 @@ import { useCart } from '@/hooks/useCart';
 import { useUnit } from '@/hooks/useUnit';
 import { UNITS } from '@/config/units';
 import { formatBRL, maskPhone } from '@/utils/formatters';
+import { formatComboSummary, formatSaucesSummary } from '@/utils/burger-rules';
 import type { Order, OrderType, PaymentMethod } from '@/data/types';
 import { sendToInternalSystem, sendToWhatsApp } from '@/utils/whatsapp';
 
@@ -69,6 +70,7 @@ export function Cart() {
   const submit = async () => {
     if (!unit) return;
     setSubmitting(true);
+    setErrors(null);
     const order: Order = {
       unit,
       items,
@@ -87,10 +89,19 @@ export function Cart() {
       subtotal,
       total,
     };
+    const idempotencyKey = crypto.randomUUID();
     try {
-      await sendToInternalSystem(order);
+      const result = await sendToInternalSystem(order, idempotencyKey);
+      if (!result.ok) {
+        setErrors(result.error);
+        setSubmitting(false);
+        return;
+      }
     } catch (e) {
       console.error(e);
+      setErrors('Não foi possível enviar seu pedido. Verifique sua conexão e tente novamente.');
+      setSubmitting(false);
+      return;
     }
     sendToWhatsApp(order);
     setSubmitting(false);
@@ -159,7 +170,7 @@ export function Cart() {
               </div>
             ) : (
               <>
-                <div className="flex-1 overflow-y-auto px-4 py-3 space-y-4">
+                <div className="flex-1 min-h-0 overflow-y-auto scrollbar-brasa px-4 py-3 space-y-4">
                   {/* Items */}
                   <div className="space-y-2">
                     {items.map((it) => (
@@ -172,7 +183,13 @@ export function Cart() {
                                 <h4 className="font-bold leading-tight">{it.name}</h4>
                                 <div className="text-[11px] text-muted-foreground mt-0.5 space-y-0.5">
                                   {it.selectedSize && <div>Tamanho: {it.selectedSize}</div>}
-                                  {it.selectedSauce && <div>Molho: {it.selectedSauce}</div>}
+                                  {(() => {
+                                    const sauces = formatSaucesSummary(it);
+                                    return sauces ? <div>{sauces}</div> : null;
+                                  })()}
+                                  {formatComboSummary(it) && (
+                                    <div>{formatComboSummary(it)}</div>
+                                  )}
                                   {it.selectedVariant && <div>{it.selectedVariant}</div>}
                                   {it.selectedOption && <div>Opção: {it.selectedOption}</div>}
                                   {it.addOns.length > 0 && (
@@ -391,6 +408,11 @@ export function Cart() {
                     de aparecer no WhatsApp. Mesmo que você feche o WhatsApp depois, ele já estará
                     registrado conosco. 😊
                   </p>
+                  {errors && (
+                    <div className="mt-3 text-sm text-destructive bg-destructive/10 border border-destructive/30 rounded-lg px-3 py-2">
+                      {errors}
+                    </div>
+                  )}
                   <div className="flex gap-2 mt-5">
                     <button
                       disabled={submitting}
@@ -426,7 +448,7 @@ export function Cart() {
 function SuccessView({ order, onClose }: { order: Order; onClose: () => void }) {
   const unit = UNITS[order.unit];
   return (
-    <div className="flex-1 overflow-y-auto px-5 py-8">
+    <div className="flex-1 min-h-0 overflow-y-auto scrollbar-brasa px-5 py-8">
       <motion.div
         initial={{ scale: 0.6, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}

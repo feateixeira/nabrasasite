@@ -15,10 +15,10 @@ export const UNITS: Record<UnitKey, UnitConfig> = {
     key: 'brazlandia',
     name: 'Brazlândia',
     whatsapp: '5561993709608',
-    placeId: 'GOOGLE_PLACE_ID_BRAZLANDIA',
+    placeId: 'ChIJPeK2VACxW5MRD_0bNk3GX8A',
     systemUser: 'SYSTEM_USER_BRAZLANDIA',
-    address: 'Endereço Brazlândia (a preencher)',
-    hours: 'Ter–Dom: 18h às 22h',
+    address: 'Quadra 35 Conjunto i Lote 23 - Brazlândia-DF',
+    hours: 'Qua-Dom: 19h às 23h',
   },
   vicentePires: {
     key: 'vicentePires',
@@ -32,3 +32,13 @@ export const UNITS: Record<UnitKey, UnitConfig> = {
 };
 
 export const UNIT_LIST: UnitConfig[] = [UNITS.brazlandia, UNITS.vicentePires];
+
+/** Slug enviado ao Burguer.IA (online-order-intake) */
+export const ESTABELECIMENTO_SLUG: Record<UnitKey, string> = {
+  brazlandia: 'brazlandia',
+  vicentePires: 'vicente-pires',
+};
+
+export function getEstabelecimentoSlug(unit: UnitKey): string {
+  return ESTABELECIMENTO_SLUG[unit];
+}

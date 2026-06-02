@@ -31,12 +31,12 @@ function Fly({
 }) {
   return (
     <motion.div
-      initial={{ x: from.x - 28, y: from.y - 28, scale: 1, opacity: 1 }}
-      animate={{ x: to.x - 14, y: to.y - 14, scale: 0.25, opacity: 0.6 }}
+      initial={{ left: from.x - 28, top: from.y - 28, scale: 1, opacity: 1 }}
+      animate={{ left: to.x - 14, top: to.y - 14, scale: 0.25, opacity: 0.6 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
       onAnimationComplete={onDone}
       style={{ pointerEvents: 'none' }}
-      className="fixed top-0 left-0 z-[80] w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary glow-ember"
+      className="fixed z-[80] w-14 h-14 rounded-full overflow-hidden ring-2 ring-primary glow-ember"
     >
       <img src={image} alt="" className="w-full h-full object-cover" />
     </motion.div>

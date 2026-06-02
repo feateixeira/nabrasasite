@@ -33,6 +33,9 @@ export interface Product {
   variants?: DrinkVariant[];
   drinkType?: string;
   specialTags?: string[];
+  isPremium?: boolean;
+  /** Combo já montado (ex.: Kids) — sem opção "transformar em combo". */
+  isPreMadeCombo?: boolean;
   isUnavailable?: boolean;
   isLoadable?: boolean;
   loadedPrice?: number;
@@ -41,6 +44,14 @@ export interface Product {
 export type OrderType = 'pickup' | 'delivery';
 export type PaymentMethod = 'cash' | 'credit' | 'debit' | 'pix';
 export type UnitKey = 'brazlandia' | 'vicentePires';
+
+export interface BurgerComboSelection {
+  id: string;
+  label: string;
+  price: number;
+  /** Bebida escolhida no combo (variante do cardápio da unidade). */
+  drink: string;
+}
 
 export interface CartItem {
   uid: string;
@@ -51,7 +62,9 @@ export interface CartItem {
   unitPrice: number;
   quantity: number;
   selectedSize?: string;
-  selectedSauce?: string;
+  /** Molhos escolhidos (até 2 grátis; extras cobrados à parte). */
+  selectedSauces?: string[];
+  selectedCombo?: BurgerComboSelection;
   selectedVariant?: string;
   selectedOption?: string;
   addOns: BurgerAddOn[];

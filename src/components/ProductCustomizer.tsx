@@ -1,20 +1,33 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X, Minus, Plus, ChevronDown } from 'lucide-react';
+import type { ComboKind, UnitCatalog } from '@/data/catalog';
+import { getProductSauces } from '@/data/catalog';
 import type { BurgerAddOn, CartItem, Product } from '@/data/types';
-import { burgerAddOns, burgerSizes } from '@/data/data';
+import {
+  FREE_SAUCES_PER_BURGER,
+  EXTRA_SAUCE_PRICE,
+  calcExtraSauceCharge,
+  canSelectCombo,
+  flattenSauceCounts,
+} from '@/utils/burger-rules';
 import { formatBRL, uid } from '@/utils/formatters';
 
 interface Props {
+  catalog: UnitCatalog;
   product: Product | null;
   origin: { x: number; y: number } | null;
   onClose: () => void;
   onConfirm: (item: CartItem, origin: { x: number; y: number }, image: string) => void;
 }
 
-export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props) {
+export function ProductCustomizer({ catalog, product, origin, onClose, onConfirm }: Props) {
+  const { burgerSizes, burgerAddOns, comboOptions } = catalog;
   const [size, setSize] = useState<string | null>(null);
-  const [sauce, setSauce] = useState<string | null>(null);
+  const [sauceCounts, setSauceCounts] = useState<Record<string, number>>({});
+  const [comboId, setComboId] = useState<ComboKind | null>(null);
+  const [comboDrink, setComboDrink] = useState<string | null>(null);
+  const [comboError, setComboError] = useState<string | null>(null);
   const [variant, setVariant] = useState<string | null>(null);
   const [option, setOption] = useState<string | null>(null);
   const [addOns, setAddOns] = useState<BurgerAddOn[]>([]);
@@ -22,13 +35,46 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
   const [qty, setQty] = useState(1);
   const [addOnsOpen, setAddOnsOpen] = useState(false);
 
+  const sauceOptions = product ? getProductSauces(product, catalog) : [];
+  const showSauces = sauceOptions.length > 0;
+  const showCombo = product ? canSelectCombo(product) : false;
+  const selectedSauces = flattenSauceCounts(sauceCounts);
+  const sauceExtra = calcExtraSauceCharge(selectedSauces.length);
+  const selectedCombo = comboId
+    ? (comboOptions.find((c) => c.id === comboId) ?? null)
+    : null;
+
+  const pickCombo = (id: ComboKind | null) => {
+    setComboError(null);
+    if (!id) {
+      setComboId(null);
+      setComboDrink(null);
+      return;
+    }
+    const opt = comboOptions.find((c) => c.id === id);
+    setComboId(id);
+    setComboDrink(opt?.drinkChoices[0] ?? null);
+  };
+
   const sizeList = product?.burgerSizeGroup ? burgerSizes[product.burgerSizeGroup] ?? [] : [];
+
+  useEffect(() => {
+    if (!product) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [product]);
 
   // initialize defaults whenever product changes
   useMemo(() => {
     if (!product) return;
     setSize(sizeList[0]?.name ?? null);
-    setSauce(null);
+    setSauceCounts({});
+    setComboId(null);
+    setComboDrink(null);
+    setComboError(null);
     setOption(product.potatoOptions?.[0]?.name ?? null);
     setVariant(product.variants?.[0]?.name ?? null);
     setAddOns([]);
@@ -42,7 +88,8 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
     if (product.type === 'burger') {
       const inc = sizeList.find((s) => s.name === size)?.priceIncrease ?? 0;
       const addons = addOns.reduce((s, a) => s + a.price, 0);
-      return product.price + inc + addons;
+      const combo = selectedCombo?.price ?? 0;
+      return product.price + inc + addons + sauceExtra + combo;
     }
     if (product.type === 'side') {
       return product.potatoOptions?.find((o) => o.name === option)?.price ?? product.price;
@@ -51,7 +98,18 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
       return product.variants?.find((v) => v.name === variant)?.price ?? product.price;
     }
     return product.price;
-  }, [product, size, addOns, option, variant, sizeList]);
+  }, [product, size, addOns, option, variant, sizeList, sauceExtra, selectedCombo]);
+
+  const adjustSauce = (name: string, delta: number) => {
+    setSauceCounts((prev) => {
+      const next = (prev[name] ?? 0) + delta;
+      if (next <= 0) {
+        const { [name]: _, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, [name]: next };
+    });
+  };
 
   const toggleAddOn = (a: BurgerAddOn) => {
     setAddOns((prev) =>
@@ -61,6 +119,11 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
 
   const submit = () => {
     if (!product || !origin) return;
+    if (selectedCombo && !comboDrink) {
+      setComboError('Escolha a bebida do combo.');
+      return;
+    }
+    setComboError(null);
     const item: CartItem = {
       uid: uid(),
       productId: product.id,
@@ -70,7 +133,15 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
       unitPrice,
       quantity: qty,
       selectedSize: product.type === 'burger' ? size ?? undefined : undefined,
-      selectedSauce: sauce ?? undefined,
+      selectedSauces: selectedSauces.length ? selectedSauces : undefined,
+      selectedCombo: selectedCombo && comboDrink
+        ? {
+            id: selectedCombo.id,
+            label: `Combo ${selectedCombo.shortLabel} + batata P`,
+            price: selectedCombo.price,
+            drink: comboDrink,
+          }
+        : undefined,
       selectedVariant: variant ?? undefined,
       selectedOption: option ?? undefined,
       addOns,
@@ -87,7 +158,7 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[55] bg-coal/80 backdrop-blur-sm flex items-end sm:items-center justify-center"
+          className="fixed inset-0 z-[55] bg-coal/80 backdrop-blur-sm flex items-end sm:items-center justify-center overflow-hidden"
           onClick={onClose}
         >
           <motion.div
@@ -96,9 +167,9 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
             exit={{ y: 60, opacity: 0 }}
             transition={{ type: 'spring', damping: 28, stiffness: 280 }}
             onClick={(e) => e.stopPropagation()}
-            className="w-full sm:max-w-md max-h-[92vh] flex flex-col bg-card rounded-t-3xl sm:rounded-3xl border border-border overflow-hidden"
+            className="w-full sm:max-w-md max-h-[90dvh] flex flex-col bg-card rounded-t-3xl sm:rounded-3xl border border-border overflow-hidden overscroll-contain"
           >
-            <div className="relative h-44 shrink-0">
+            <div className="relative h-28 sm:h-32 shrink-0">
               <img src={product.image} alt={product.name} className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-gradient-to-t from-card via-card/40 to-transparent" />
               <button
@@ -107,13 +178,17 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
               >
                 <X className="w-5 h-5" />
               </button>
-              <div className="absolute bottom-3 left-4 right-4">
-                <h2 className="font-display text-3xl text-foreground leading-none">{product.name}</h2>
+              <div className="absolute bottom-2 left-4 right-4">
+                <h2 className="font-display text-2xl sm:text-3xl text-foreground leading-none">
+                  {product.name}
+                </h2>
               </div>
             </div>
 
-            <div className="overflow-y-auto px-4 py-4 space-y-5 flex-1">
-              <p className="text-sm text-muted-foreground">{product.description}</p>
+            <div className="flex-1 min-h-0 overflow-x-hidden overflow-y-auto overscroll-contain scrollbar-hide px-4 py-3 space-y-3">
+              <p className="text-xs text-muted-foreground line-clamp-2 leading-snug">
+                {product.description}
+              </p>
 
               {product.type === 'burger' && sizeList.length > 0 && (
                 <Section title="Tamanho">
@@ -131,18 +206,104 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
                 </Section>
               )}
 
-              {product.type === 'burger' && product.availableSauces && (
-                <Section title="Molho (opcional)">
-                  <div className="flex flex-wrap gap-2">
-                    {product.availableSauces.map((s) => (
-                      <Chip
-                        key={s}
-                        active={sauce === s}
-                        onClick={() => setSauce(sauce === s ? null : s)}
-                        label={s}
+              {showSauces && (
+                <Section title="Molhos" compact>
+                  <p className="text-[10px] text-muted-foreground mb-1.5 leading-tight">
+                    {FREE_SAUCES_PER_BURGER} grátis · +{formatBRL(EXTRA_SAUCE_PRICE)} cada extra
+                  </p>
+                  <div className="grid grid-cols-2 gap-1.5 max-w-full">
+                    {sauceOptions.map((s) => {
+                      const count = sauceCounts[s] ?? 0;
+                      return (
+                        <div
+                          key={s}
+                          className={`flex items-center justify-between gap-0.5 px-1 py-0.5 rounded-md border min-h-[32px] min-w-0 ${
+                            count > 0
+                              ? 'border-primary/50 bg-primary/10'
+                              : 'border-border bg-secondary/40'
+                          }`}
+                        >
+                          <span className="text-[9px] font-medium text-foreground truncate leading-tight flex-1 min-w-0">
+                            {s}
+                          </span>
+                          <div className="flex items-center shrink-0">
+                            <button
+                              type="button"
+                              onClick={() => adjustSauce(s, -1)}
+                              disabled={count === 0}
+                              className="w-5 h-5 rounded-full bg-coal flex items-center justify-center disabled:opacity-40"
+                              aria-label={`Menos ${s}`}
+                            >
+                              <Minus className="w-2.5 h-2.5" />
+                            </button>
+                            <span className="w-3 text-center text-[9px] font-bold tabular-nums">
+                              {count}
+                            </span>
+                            <button
+                              type="button"
+                              onClick={() => adjustSauce(s, 1)}
+                              className="w-5 h-5 rounded-full bg-coal flex items-center justify-center"
+                              aria-label={`Mais ${s}`}
+                            >
+                              <Plus className="w-2.5 h-2.5" />
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </Section>
+              )}
+
+              {showCombo && (
+                <Section title="Combo">
+                  <div className="grid grid-cols-4 gap-1.5">
+                    <ComboMiniBtn
+                      active={comboId === null}
+                      onClick={() => pickCombo(null)}
+                      label="Só"
+                      price={null}
+                    />
+                    {comboOptions.map((c) => (
+                      <ComboMiniBtn
+                        key={c.id}
+                        active={comboId === c.id}
+                        onClick={() => pickCombo(c.id)}
+                        label={c.shortLabel}
+                        price={c.price}
                       />
                     ))}
                   </div>
+                  {selectedCombo && selectedCombo.drinkChoices.length > 0 && (
+                    <div className="mt-2">
+                      <p className="text-[10px] text-muted-foreground mb-1.5 uppercase tracking-wide">
+                        Bebida
+                      </p>
+                      <div className="flex flex-wrap gap-1">
+                        {selectedCombo.drinkChoices.map((d) => (
+                          <button
+                            key={d}
+                            type="button"
+                            title={d}
+                            onClick={() => {
+                              setComboDrink(d);
+                              setComboError(null);
+                            }}
+                            className={`max-w-full px-2 py-1 rounded-md border text-[10px] leading-tight font-medium transition-colors truncate ${
+                              comboDrink === d
+                                ? 'border-primary bg-primary/10 text-foreground'
+                                : 'border-border bg-secondary/40 text-muted-foreground'
+                            }`}
+                          >
+                            {d.replace(/ lata| \d+ml/gi, '').trim()}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {comboError && (
+                    <p className="text-[11px] text-destructive mt-1.5">{comboError}</p>
+                  )}
                 </Section>
               )}
 
@@ -286,12 +447,55 @@ export function ProductCustomizer({ product, origin, onClose, onConfirm }: Props
   );
 }
 
-function Section({ title, children }: { title: string; children: React.ReactNode }) {
+function Section({
+  title,
+  children,
+  compact,
+}: {
+  title: string;
+  children: React.ReactNode;
+  compact?: boolean;
+}) {
   return (
     <div>
-      <h4 className="font-display text-sm tracking-widest text-primary mb-2">{title.toUpperCase()}</h4>
+      <h4
+        className={`font-display tracking-widest text-primary ${
+          compact ? 'text-[11px] mb-1.5' : 'text-sm mb-2'
+        }`}
+      >
+        {title.toUpperCase()}
+      </h4>
       {children}
     </div>
+  );
+}
+
+function ComboMiniBtn({
+  active,
+  onClick,
+  label,
+  price,
+}: {
+  active: boolean;
+  onClick: () => void;
+  label: string;
+  price: number | null;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className={`flex flex-col items-center justify-center min-h-[52px] px-1 py-1.5 rounded-lg border text-center transition-colors ${
+        active
+          ? 'border-primary bg-primary/10 text-foreground'
+          : 'border-border bg-secondary/40 text-muted-foreground'
+      }`}
+    >
+      <span className="text-[11px] font-bold leading-tight">{label}</span>
+      {price != null && (
+        <span className="text-[9px] text-primary font-semibold mt-0.5">+{formatBRL(price)}</span>
+      )}
+    </button>
   );
 }
 

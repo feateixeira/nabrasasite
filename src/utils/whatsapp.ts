@@ -1,5 +1,6 @@
 import type { Order } from '@/data/types';
 import { UNITS } from '@/config/units';
+import { formatComboSummary, formatSaucesSummary } from './burger-rules';
 import { formatBRL } from './formatters';
 
 const PAYMENT_LABEL: Record<string, string> = {
@@ -26,7 +27,10 @@ export function buildWhatsAppMessage(order: Order): string {
   order.items.forEach((it, idx) => {
     lines.push(`${idx + 1}. ${it.quantity}x ${it.name}`);
     if (it.selectedSize) lines.push(`   • Tamanho: ${it.selectedSize}`);
-    if (it.selectedSauce) lines.push(`   • Molho: ${it.selectedSauce}`);
+    const sauces = formatSaucesSummary(it);
+    if (sauces) lines.push(`   • ${sauces}`);
+    const combo = formatComboSummary(it);
+    if (combo) lines.push(`   • ${combo} (+${formatBRL(it.selectedCombo!.price)})`);
     if (it.selectedVariant) lines.push(`   • Sabor: ${it.selectedVariant}`);
     if (it.selectedOption) lines.push(`   • Opção: ${it.selectedOption}`);
     if (it.addOns.length) {
@@ -61,14 +65,5 @@ export function sendToWhatsApp(order: Order): void {
   window.open(`https://wa.me/${phone}?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-/**
- * STUB: integração com sistema interno por unidade.
- * TODO: configurar endpoint e credenciais reais.
- */
-export async function sendToInternalSystem(order: Order): Promise<{ ok: boolean }> {
-  const unit = UNITS[order.unit];
-  // eslint-disable-next-line no-console
-  console.info('[sendToInternalSystem] enviar pedido', { systemUser: unit.systemUser, order });
-  await new Promise((r) => setTimeout(r, 600));
-  return { ok: true };
-}
+export type { SendOrderResult } from './order-intake';
+export { submitOnlineOrder as sendToInternalSystem } from './order-intake';

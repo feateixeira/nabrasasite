@@ -1,7 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from 'react';
 import type { UnitKey } from '@/data/types';
 
-const KEY = 'nb_unit';
+const SESSION_KEY = 'nb_unit';
 
 interface UnitCtx {
   unit: UnitKey | null;
@@ -12,16 +12,18 @@ const Ctx = createContext<UnitCtx | null>(null);
 
 export function UnitProvider({ children }: { children: ReactNode }) {
   const [unit, setUnitState] = useState<UnitKey | null>(null);
+
   useEffect(() => {
-    const stored = typeof window !== 'undefined' ? localStorage.getItem(KEY) : null;
+    const stored = sessionStorage.getItem(SESSION_KEY);
     if (stored === 'brazlandia' || stored === 'vicentePires') setUnitState(stored);
   }, []);
+
   const setUnit = useCallback((u: UnitKey) => {
-    localStorage.setItem(KEY, u);
+    sessionStorage.setItem(SESSION_KEY, u);
     setUnitState(u);
   }, []);
   const clear = useCallback(() => {
-    localStorage.removeItem(KEY);
+    sessionStorage.removeItem(SESSION_KEY);
     setUnitState(null);
   }, []);
   return <Ctx.Provider value={{ unit, setUnit, clear }}>{children}</Ctx.Provider>;

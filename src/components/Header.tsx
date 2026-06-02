@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { MapPin, Phone, ShoppingBag, RefreshCw } from 'lucide-react';
 import { Link } from '@tanstack/react-router';
@@ -11,11 +11,20 @@ export function Header() {
   const { unit } = useUnit();
   const { count, open, setCartIconRef, bumpKey } = useCart();
   const [switching, setSwitching] = useState(false);
+  const [bumpAnim, setBumpAnim] = useState(false);
   const ref = useRef<HTMLButtonElement | null>(null);
 
+  const cartBtnRef = useCallback(
+    (el: HTMLButtonElement | null) => {
+      ref.current = el;
+      setCartIconRef(el);
+    },
+    [setCartIconRef],
+  );
+
   useEffect(() => {
-    setCartIconRef(ref.current);
-  }, [setCartIconRef]);
+    if (bumpKey > 0) setBumpAnim(true);
+  }, [bumpKey]);
 
   return (
     <>
@@ -63,12 +72,11 @@ export function Header() {
           </Link>
 
           <motion.button
-            ref={ref}
+            ref={cartBtnRef}
             onClick={open}
-            key={bumpKey}
-            initial={{ scale: 1 }}
-            animate={{ scale: [1, 1.18, 1] }}
+            animate={bumpAnim ? { scale: [1, 1.18, 1] } : { scale: 1 }}
             transition={{ duration: 0.35 }}
+            onAnimationComplete={() => setBumpAnim(false)}
             className="relative p-2 rounded-lg ember-gradient text-primary-foreground glow-ember"
             aria-label="Abrir carrinho"
           >

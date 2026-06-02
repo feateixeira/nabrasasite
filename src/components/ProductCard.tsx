@@ -3,8 +3,6 @@ import { Plus, Crown } from 'lucide-react';
 import type { Product } from '@/data/types';
 import { formatBRL } from '@/utils/formatters';
 
-const PREMIUM_IDS = new Set(['1', '2', '3', '4', '5']);
-
 interface Props {
   product: Product;
   onAdd: (rect: DOMRect) => void;
@@ -16,7 +14,7 @@ export function ProductCard({ product, onAdd }: Props) {
     onAdd(r);
   };
   const unavailable = product.isUnavailable;
-  const isPremium = product.type === 'burger' && PREMIUM_IDS.has(product.id);
+  const isPremium = product.isPremium === true;
 
   return (
     <motion.article

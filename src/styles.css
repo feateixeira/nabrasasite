@@ -1,10 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
 @import "tailwindcss" source(none);
 @source "../src";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
-
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700&display=swap');
 
 /*
  * Design system definition.
@@ -150,6 +149,29 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.78 0.18 65 / 0.45) oklch(0.16 0.012 60);
+  }
+
+  html::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  html::-webkit-scrollbar-track {
+    background: oklch(0.16 0.012 60);
+  }
+
+  html::-webkit-scrollbar-thumb {
+    background: oklch(0.78 0.18 65 / 0.45);
+    border-radius: 999px;
+  }
+
+  html::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.85 0.2 75 / 0.6);
+  }
+
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
@@ -180,7 +202,26 @@
     box-shadow: 0 8px 30px -8px oklch(0.78 0.18 65 / 0.45), 0 0 0 1px oklch(0.78 0.18 65 / 0.2);
   }
   .scrollbar-hide::-webkit-scrollbar { display: none; }
-  .scrollbar-hide { scrollbar-width: none; }
+  .scrollbar-hide { scrollbar-width: none; -ms-overflow-style: none; }
+  .scrollbar-brasa {
+    scrollbar-width: thin;
+    scrollbar-color: oklch(0.78 0.18 65 / 0.45) oklch(0.21 0.014 55);
+  }
+  .scrollbar-brasa::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+  .scrollbar-brasa::-webkit-scrollbar-track {
+    background: oklch(0.19 0.013 55);
+    border-radius: 999px;
+  }
+  .scrollbar-brasa::-webkit-scrollbar-thumb {
+    background: oklch(0.78 0.18 65 / 0.5);
+    border-radius: 999px;
+  }
+  .scrollbar-brasa::-webkit-scrollbar-thumb:hover {
+    background: oklch(0.85 0.2 75 / 0.65);
+  }
   .charcoal-card {
     background: linear-gradient(180deg, oklch(0.23 0.014 55) 0%, oklch(0.19 0.013 55) 100%);
   }

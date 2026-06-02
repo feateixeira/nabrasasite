@@ -8,11 +8,14 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 
+import { AnimatePresence } from "framer-motion";
 import appCss from "../styles.css?url";
-import { UnitProvider } from "@/hooks/useUnit";
+import { UnitProvider, useUnit } from "@/hooks/useUnit";
 import { CartProvider } from "@/hooks/useCart";
 import { Cart } from "@/components/Cart";
 import { CartItemFlyAnimation } from "@/components/CartItemFlyAnimation";
+import { UnitSelector } from "@/components/UnitSelector";
+import { UnitCartSync } from "@/components/UnitCartSync";
 
 function NotFoundComponent() {
   return (
@@ -76,16 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Na Brasa 🔥 — Hamburgueria Artesanal" },
+      { title: "Hamburgueria Na Brasa - Cardápio Online" },
       { name: "description", content: "Hamburgueria artesanal no carvão. Peça online em Brazlândia ou Vicente Pires." },
       { name: "author", content: "Hamburgueria Na Brasa" },
-      { property: "og:title", content: "Na Brasa 🔥 — Peça online" },
+      { property: "og:title", content: "Hamburgueria Na Brasa - Cardápio Online" },
       { property: "og:description", content: "Hambúrgueres artesanais no carvão. Brazlândia · Vicente Pires." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
+      { rel: "icon", type: "image/png", href: "/favicon.png" },
+      { rel: "apple-touch-icon", href: "/favicon.png" },
       {
         rel: "stylesheet",
         href: appCss,
@@ -119,11 +124,23 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <UnitProvider>
         <CartProvider>
-          <Outlet />
-          <Cart />
-          <CartItemFlyAnimation />
+          <AppShell />
         </CartProvider>
       </UnitProvider>
     </QueryClientProvider>
+  );
+}
+
+function AppShell() {
+  const { unit } = useUnit();
+
+  return (
+    <>
+      <UnitCartSync />
+      <Outlet />
+      <Cart />
+      <CartItemFlyAnimation />
+      <AnimatePresence>{!unit && <UnitSelector />}</AnimatePresence>
+    </>
   );
 }

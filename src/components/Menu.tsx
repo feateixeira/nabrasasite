@@ -1,6 +1,5 @@
-import { useMemo, useState } from 'react';
-import { products as productsBrazlandia } from '@/data/data';
-import { products as productsVicentePires } from '@/data/data-vicente-pires';
+import { useEffect, useMemo, useState } from 'react';
+import { getCatalog } from '@/data/catalog';
 import type { CartItem, Product } from '@/data/types';
 import { ProductCard } from './ProductCard';
 import { ProductCustomizer } from './ProductCustomizer';
@@ -19,9 +18,20 @@ export function Menu() {
   const [origin, setOrigin] = useState<{ x: number; y: number } | null>(null);
   const { add } = useCart();
   const { unit } = useUnit();
-  const products = unit === 'vicentePires' ? productsVicentePires : productsBrazlandia;
 
-  const list = useMemo(() => products.filter((p) => p.type === active), [active]);
+  const catalog = useMemo(() => (unit ? getCatalog(unit) : null), [unit]);
+
+  const list = useMemo(
+    () => catalog?.products.filter((p) => p.type === active) ?? [],
+    [catalog, active],
+  );
+
+  useEffect(() => {
+    if (!unit) return;
+    setCustomizing(null);
+    setOrigin(null);
+    setActive('burger');
+  }, [unit]);
 
   const openProduct = (p: Product, rect: DOMRect) => {
     setOrigin({ x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 });
@@ -32,8 +42,10 @@ export function Menu() {
     add(item, o, image);
   };
 
+  if (!unit || !catalog) return null;
+
   return (
-    <div className="max-w-2xl mx-auto pb-32">
+    <div key={unit} className="max-w-2xl mx-auto pb-32">
       {/* Categories */}
       <div className="sticky top-[60px] z-30 bg-background/95 backdrop-blur-md border-b border-border mt-2">
         <div className="flex gap-2 overflow-x-auto scrollbar-hide px-4 py-3">
@@ -56,11 +68,17 @@ export function Menu() {
 
       <section className="px-4 pt-4 space-y-3">
         {list.map((p) => (
-          <ProductCard key={p.id} product={p} onAdd={(r) => openProduct(p, r)} />
+          <ProductCard
+            key={`${unit}-${p.id}`}
+            product={p}
+            onAdd={(r) => openProduct(p, r)}
+          />
         ))}
       </section>
 
       <ProductCustomizer
+        key={unit}
+        catalog={catalog}
         product={customizing}
         origin={origin}
         onClose={() => setCustomizing(null)}
